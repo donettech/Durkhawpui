@@ -1,0 +1,4 @@
+storePassword=DoNET20#
+keyPassword=DoNET12#
+keyAlias=key0
+storeFile=keys/DoNET20.jks
