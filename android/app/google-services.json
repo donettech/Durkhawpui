@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "854830568891-s6pj1c7eqeg4htsiiereeqrpl8kripc8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.durtlang.app",
+            "certificate_hash": "039a12ed24c7dfe853fdb4170b463eb4ee9f9431"
+          }
+        },
+        {
           "client_id": "854830568891-tuh0bt6po2f3oeli17bvi9car8mphtjs.apps.googleusercontent.com",
           "client_type": 3
         }

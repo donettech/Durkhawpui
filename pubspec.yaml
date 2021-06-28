@@ -1,4 +1,4 @@
-name: app
+name: durkhawpui
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -29,8 +29,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+  bottom_navy_bar: ^6.0.0
+
   firebase_core: ^1.0.4
   firebase_auth: ^1.1.1
+  google_sign_in: ^5.0.4
   cloud_firestore: ^1.0.6 
   firebase_messaging: ^10.0.2
 
@@ -49,6 +52,8 @@ dependencies:
   url_launcher: ^6.0.3
   share: ^2.0.1
 
+  flutter_secure_storage: ^4.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,8 +70,16 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/110.jpg
+    - assets/111.png
+    - assets/112.png
+    - assets/113.png
+    - assets/114.png
+    - assets/115.png
+    - assets/cat1.png
+    - assets/cat2.png
+    - assets/hello.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
