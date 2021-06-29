@@ -12,4 +12,8 @@ class SecureController extends GetxController {
       return true;
     }
   }
+
+  Future<void> skip() async {
+    storage.write(key: 'skipped', value: true.toString());
+  }
 }

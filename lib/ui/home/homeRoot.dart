@@ -1,6 +1,8 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:durkhawpui/controllers/secureStorage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeRoot extends StatefulWidget {
   HomeRoot({Key? key}) : super(key: key);
@@ -31,6 +33,9 @@ class _HomeRootState extends State<HomeRoot> {
       appBar: AppBar(title: Text("Bottom Nav Bar")),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Get.find<SecureController>().storage.deleteAll().then((value) {
+            setState(() {});
+          });
           FirebaseAuth.instance.signOut();
         },
       ),

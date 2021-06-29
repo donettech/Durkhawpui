@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:durkhawpui/controllers/secureStorage.dart';
+import 'package:durkhawpui/ui/initial/root.dart';
 import 'package:durkhawpui/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,8 @@ class _SignInState extends State<SignIn> {
       setState(() {
         loading = false;
       });
+      Get.find<SecureController>().skip();
+      Get.offAll(Root());
     } on FirebaseAuthException catch (e) {
       setState(() {
         loading = false;
@@ -80,18 +83,14 @@ class _SignInState extends State<SignIn> {
             Container(
               width: double.infinity,
               height: double.infinity,
-              child: Center(
-                child: SizedBox(
-                  width: Get.width * 0.55,
-                  height: Get.width * 0.55,
-                  child: Image.asset(
-                    'assets/114.png',
-                  ),
-                ),
-              ),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                'assets/000.jpg',
+              ))),
             ),
             Positioned(
-              top: 10,
+              top: 15,
               left: 15,
               child: AnimatedContainer(
                 duration: Duration(seconds: 1),
@@ -105,7 +104,7 @@ class _SignInState extends State<SignIn> {
               ),
             ),
             Positioned(
-              top: 200,
+              top: 120,
               child: Text(
                 "Durkhawpui",
                 style: GoogleFonts.yellowtail(
@@ -113,33 +112,27 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
             ),
-            // Positioned(
-            //   bottom: 10,
-            //   right: 5,
-            //   child: SizedBox(
-            //     width: 100,
-            //     height: 50,
-            //     child: Image.asset('assets/cat1.png'),
-            //   ),
-            // ),
-            // Positioned(
-            //   bottom: 10,
-            //   left: 5,
-            //   child: SizedBox(
-            //     width: 100,
-            //     height: 50,
-            //     child: Image.asset('assets/cat2.png'),
-            //   ),
-            // ),
             Positioned(
-              bottom: 10,
+              top: 180,
+              left: 15,
+              right: 15,
+              child: Text(
+                "Durtlang information system awlsam zawk a hriat theih na",
+                style: GoogleFonts.roboto(
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Positioned(
+              bottom: 20,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton(
                     onPressed: _handleSignIn,
                     style: ElevatedButton.styleFrom(
-                      primary: Constants.primary,
+                      primary: Constants.secondary,
                     ),
                     child: Container(
                       width: Get.width * 0.5,
@@ -157,7 +150,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                               )
                             : Text(
-                                "Sign in",
+                                "Sign in with Google",
                                 style: GoogleFonts.ptSans(
                                   fontSize: 18,
                                 ),
@@ -178,11 +171,16 @@ class _SignInState extends State<SignIn> {
                     height: 10,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.find<SecureController>().skip().then((value) {
+                        Get.offAll(Root());
+                      });
+                    },
                     child: Text(
                       "Skip",
                       style: GoogleFonts.ptSans(
                         fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
                   ),
