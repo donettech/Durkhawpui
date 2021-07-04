@@ -15,10 +15,10 @@ class Member {
           userId: documentId,
           name: json['name']! as String,
           email: json['email']! as String,
-          phone: json['phone']! as String,
           role: json['role']! as String,
           avatarUrl: json['avatarUrl']! as String,
           createdAt: (json['createdAt'] as Timestamp).toDate(),
+          phone: json['phone']! as String,
         );
   late String userId;
   late String name;
