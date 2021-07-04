@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:durkhawpui/controllers/UserController.dart';
+import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';
 import 'package:durkhawpui/ui/home/homeRoot.dart';
 import 'package:durkhawpui/ui/initial/signIn.dart';
@@ -16,27 +17,30 @@ class Root extends StatefulWidget {
 
 class _RootState extends State<Root> {
   FirebaseAuth auth = FirebaseAuth.instance;
-  final _fire = FirebaseFirestore.instance.collection('users');
   final secure = Get.put(SecureController());
+  final noti = Get.put(NotiController());
+
   bool? signedIn;
 
   @override
   void initState() {
     super.initState();
     listenAuth();
+    noti.handleNoti();
   }
 
   listenAuth() async {
     var isFirstTime = await secure.isFirstTime();
+    print("First time " + isFirstTime.toString());
     if (isFirstTime is bool && isFirstTime) {
-      Get.offAll(SignIn());
+      Get.offAll(() => SignIn());
       return true;
     } else {
       User? user = auth.currentUser;
       if (user != null) {
-        //TODO get user data
+        Get.find<UserController>().getUserData(signedInUser: user);
       }
-      Get.offAll(HomeRoot());
+      Get.offAll(() => HomeRoot());
       return true;
     }
   }
