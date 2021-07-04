@@ -11,14 +11,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class AddQuarantineDialog extends StatefulWidget {
-  AddQuarantineDialog({Key? key}) : super(key: key);
+class AddNewNotice extends StatefulWidget {
+  AddNewNotice({Key? key}) : super(key: key);
 
   @override
-  _AddQuarantineDialogState createState() => _AddQuarantineDialogState();
+  _AddNewNoticeState createState() => _AddNewNoticeState();
 }
 
-class _AddQuarantineDialogState extends State<AddQuarantineDialog> {
+class _AddNewNoticeState extends State<AddNewNotice> {
   final userCtrl = Get.find<UserController>();
   final _name = TextEditingController();
   final _contactor = TextEditingController();
@@ -292,39 +292,37 @@ class _AddQuarantineDialogState extends State<AddQuarantineDialog> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (_form.currentState!.validate()) {
-                    Quarantine temp = Quarantine(
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
-                      quarantineFrom: _quarantineFrom,
-                      quarantineTo: _quarantineTo,
-                      docId: '',
-                      name: _name.text,
-                      ymaSection: _chosenSection,
-                      veng: _chosenVeng,
-                      contactor: _contactor.text,
-                      location: newLocation,
-                      createdBy: Creator(
-                        id: userCtrl.user.value.userId,
-                        name: userCtrl.user.value.name,
-                      ),
-                    );
-                    Get.dialog(Center(
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: CupertinoActivityIndicator(),
-                      ),
-                    ));
-                    FirebaseFirestore.instance
-                        .collection('quarantines')
-                        .add(temp.toJson())
-                        .then((value) {
-                      Get.back();
-                      Get.back();
-                      Get.snackbar('Success', 'Quarantine dahbelh a zo e');
-                    });
-                  }
+                  Quarantine temp = Quarantine(
+                    createdAt: DateTime.now(),
+                    updatedAt: DateTime.now(),
+                    quarantineFrom: _quarantineFrom,
+                    quarantineTo: _quarantineTo,
+                    docId: '',
+                    name: _name.text,
+                    ymaSection: _chosenSection,
+                    veng: _chosenVeng,
+                    contactor: _contactor.text,
+                    location: newLocation,
+                    createdBy: Creator(
+                      id: userCtrl.user.value.userId,
+                      name: userCtrl.user.value.name,
+                    ),
+                  );
+                  Get.dialog(Center(
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CupertinoActivityIndicator(),
+                    ),
+                  ));
+                  FirebaseFirestore.instance
+                      .collection('quarantines')
+                      .add(temp.toJson())
+                      .then((value) {
+                    Get.back();
+                    Get.back();
+                    Get.snackbar('Success', 'Quarantine dahbelh a zo e');
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Constants.primary,

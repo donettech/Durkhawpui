@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/model/creator.dart';
 
-class Quaratine {
+class Quarantine {
   late DateTime createdAt;
   late DateTime updatedAt;
   late DateTime quarantineFrom;
@@ -14,7 +14,7 @@ class Quaratine {
   late GeoPoint location;
   late Creator createdBy;
 
-  Quaratine({
+  Quarantine({
     required this.createdAt,
     required this.updatedAt,
     required this.quarantineFrom,
@@ -27,7 +27,7 @@ class Quaratine {
     required this.location,
     required this.createdBy,
   });
-  Quaratine.fromJson(Map<String, dynamic> json, String documentId)
+  Quarantine.fromJson(Map<String, dynamic> json, String documentId)
       : this(
           docId: documentId,
           name: json['name']! as String,
