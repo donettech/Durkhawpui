@@ -9,7 +9,7 @@ class Notice {
   late String title;
   late String desc;
   late String excerpt;
-  late String attachmentLink;
+  late String? attachmentLink;
   late int attachmentType;
   /* 
   notice attachment types
@@ -17,7 +17,7 @@ class Notice {
   1=image
   2=pdf
    */
-
+//TODO notice model diklo adjust ngai
   Notice({
     required this.createdAt,
     required this.updatedAt,

@@ -1,4 +1,5 @@
 import 'package:durkhawpui/controllers/UserController.dart';
+import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';
 import 'package:durkhawpui/ui/home/homeRoot.dart';
@@ -27,6 +28,7 @@ class _RootState extends State<Root> {
     super.initState();
     listenAuth();
     noti.handleNoti();
+    Get.lazyPut(() => ImageController());
   }
 
   listenAuth() async {

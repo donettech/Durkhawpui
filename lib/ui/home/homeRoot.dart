@@ -1,16 +1,10 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:durkhawpui/controllers/UserController.dart';
-import 'package:durkhawpui/controllers/secureStorage.dart';
-import 'package:durkhawpui/model/user.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeMain.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeNotices.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeQuarantines.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeSettings.dart';
 import 'package:durkhawpui/utils/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeRoot extends StatefulWidget {

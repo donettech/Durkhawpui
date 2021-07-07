@@ -1,15 +1,16 @@
-import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
+import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/model/creator.dart';
-import 'package:durkhawpui/model/quarantine.dart';
+import 'package:durkhawpui/model/notice.dart';
 import 'package:durkhawpui/utils/constants.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddNewNotice extends StatefulWidget {
   AddNewNotice({Key? key}) : super(key: key);
@@ -20,58 +21,37 @@ class AddNewNotice extends StatefulWidget {
 
 class _AddNewNoticeState extends State<AddNewNotice> {
   final userCtrl = Get.find<UserController>();
-  final _name = TextEditingController();
-  final _contactor = TextEditingController();
+  final _title = TextEditingController();
+  final _description = TextEditingController();
   final _form = GlobalKey<FormState>();
-  late DateTime _quarantineFrom;
-  late DateTime _quarantineTo;
-  Completer<GoogleMapController> _mapController = Completer();
-  Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
-  int _markerIdCounter = 0;
-  String _chosenSection = "Section A";
-  String _chosenVeng = "Zion Veng";
-  GeoPoint newLocation =
-      GeoPoint(23.7779, 92.7307); // Durtlang geopoint manual a dah ani
+  final _fire = FirebaseFirestore.instance;
 
-//area chhung section inthen dan
-  List<String> ymaSections = [
-    "Section A",
-    "Section B",
-    "Section C",
-    "Section D",
-    "Section E",
-    "Section F"
-  ];
-// khua/area chhung a veng te zawk te hming
-  List<String> vengList = [
-    "Zion Veng",
-    "Mel-5",
-    "Mel-5 kawngthlang",
-    "Venglai",
-    "Dawrkawn",
-    "Dawrkawn tlang",
-    "Mualveng",
-    "M.Suaka veng",
-  ];
+  PlatformFile? attachmentFile;
+  int attachType = 0;
+  bool notiOn = true;
+  /* 
+  notice attachment types
+  0=none
+  1=image
+  2=pdf
+   */
 
   @override
   void initState() {
     super.initState();
-    _quarantineFrom = DateTime.now();
-    _quarantineTo = DateTime.now().add(Duration(days: 10));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Quarantine thar dah belhna"),
+        title: Text("Thuchhuah thar siamna"),
         centerTitle: true,
       ),
       body: Form(
         key: _form,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -79,11 +59,11 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                 height: 15,
               ),
               TextFormField(
-                controller: _name,
+                controller: _title,
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
-                  labelText: "Hming",
-                  hintText: "Quarantine tur hming/chhungkaw pa hming",
+                  labelText: "Title",
+                  hintText: "A thupui tawi fel takin",
                   fillColor: Colors.white,
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(15.0),
@@ -97,97 +77,22 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                 ),
                 validator: (val) {
                   if (val?.length == 0) {
-                    return "Hming chhut a ngai";
+                    return "Thupui ziah a ngai";
                   } else {
                     return null;
                   }
                 },
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: DropdownButton<String>(
-                      focusColor: Colors.white,
-                      value: _chosenVeng,
-                      style: TextStyle(color: Colors.white),
-                      iconEnabledColor: Colors.white,
-                      items: vengList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: Theme.of(context).textTheme.bodyText2,
-                            textAlign: TextAlign.start,
-                          ),
-                        );
-                      }).toList(),
-                      hint: Text(
-                        "Veng thlan a ngai",
-                        style: Theme.of(context).textTheme.bodyText2,
-                        textAlign: TextAlign.center,
-                      ),
-                      onChanged: (String? value) {
-                        if (value != null) {
-                          setState(() {
-                            _chosenVeng = value;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: DropdownButton<String>(
-                      focusColor: Colors.white,
-                      value: _chosenSection,
-                      //elevation: 5,
-                      style: TextStyle(color: Colors.white),
-                      iconEnabledColor: Colors.white,
-                      items: ymaSections
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: Theme.of(context).textTheme.bodyText2,
-                            textAlign: TextAlign.start,
-                          ),
-                        );
-                      }).toList(),
-                      hint: Text(
-                        "Section thlan a ngai",
-                        style: Theme.of(context).textTheme.bodyText2,
-                        textAlign: TextAlign.center,
-                      ),
-                      onChanged: (String? value) {
-                        if (value != null) {
-                          setState(() {
-                            _chosenSection = value;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
               SizedBox(
                 height: 10,
               ),
               TextFormField(
-                controller: _contactor,
+                controller: _description,
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
-                  labelText: "Contact tu",
-                  hintText: "Contact tu hming/Kai rinhlelhna",
+                  labelText: "Description",
+                  labelStyle: TextStyle(),
+                  hintText: "A sawi zau na",
                   fillColor: Colors.white,
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(15.0),
@@ -197,132 +102,192 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                     borderRadius: new BorderRadius.circular(15.0),
                     borderSide: new BorderSide(color: Constants.primary),
                   ),
-                  //fillColor: Colors.green
                 ),
+                maxLines: 5,
+                validator: (val) {
+                  if (val?.length == 0) {
+                    return "Sawi zauna ziah a ngai";
+                  } else {
+                    return null;
+                  }
+                },
               ),
               SizedBox(
                 height: 10,
               ),
               Row(
                 children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Quarantine Tan ni"),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.date_range_outlined,
-                          ),
-                        ),
-                        Text(
-                          _formatDate(_quarantineFrom),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Quarantine tawp ni"),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.date_range_outlined,
-                          ),
-                        ),
-                        Text(
-                          _formatDate(_quarantineTo),
-                        ),
-                      ],
-                    ),
-                  ),
+                  Text("Notification "),
+                  Spacer(),
+                  Switch(
+                      value: notiOn,
+                      onChanged: (newValue) {
+                        setState(() {
+                          notiOn = newValue;
+                        });
+                      })
                 ],
               ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "An in awmna map ah hian thlan tur ani e",
-                    style: Theme.of(context).textTheme.headline6!.copyWith(
-                          decoration: TextDecoration.underline,
-                        ),
-                  ),
-                ),
+              SizedBox(
+                height: 10,
               ),
-              Expanded(
-                child: SizedBox(
-                  width: Get.width,
-                  child: GoogleMap(
-                    markers: Set<Marker>.of(_markers.values),
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                        23.7779,
-                        92.7307,
-                      ),
-                      zoom: 16.0,
-                    ),
-                    onMapCreated: _onMapCreated,
-                    buildingsEnabled: true,
-                    mapType: MapType.hybrid,
-                    mapToolbarEnabled: false,
-                    myLocationEnabled: false,
-                    onCameraMove: (CameraPosition position) {
-                      if (_markers.length > 0) {
-                        MarkerId markerId = MarkerId(_markerIdVal());
-                        Marker? marker = _markers[markerId];
-                        Marker updatedMarker = marker!.copyWith(
-                          positionParam: position.target,
+              Row(
+                children: [
+                  Text("Attachment:"),
+                  if (attachmentFile != null)
+                    Expanded(child: Text(attachmentFile!.name.toString())),
+                  if (attachmentFile == null) Spacer(),
+                  IconButton(
+                    onPressed: () async {
+                      var ctrl = Get.find<ImageController>();
+                      PlatformFile? imgFile = await ctrl.selectImage();
+                      if (imgFile == null) return;
+                      File _file = File(imgFile.path!);
+                      if (imgFile.extension != "pdf") {
+                        var confirmed = await Get.dialog(
+                          Center(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 25, horizontal: 15),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 5),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                  color: Colors.grey[500],
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ConstrainedBox(
+                                      constraints: new BoxConstraints(
+                                        maxHeight: Get.height * 0.7,
+                                      ),
+                                      child: Image.file(_file),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              Get.back();
+                                              return null;
+                                            },
+                                            icon: Icon(
+                                              Icons.cancel_outlined,
+                                              color: Colors.black,
+                                              size: 30,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              Get.back(result: true);
+                                            },
+                                            icon: Icon(
+                                              Icons.done_rounded,
+                                              color: Colors.black,
+                                              size: 30,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         );
+                        if (confirmed != null && confirmed) {
+                          setState(() {
+                            attachmentFile = imgFile;
+                          });
+                        }
+                      } else {
                         setState(() {
-                          _markers[markerId] = updatedMarker;
-                          newLocation = GeoPoint(position.target.latitude,
-                              position.target.longitude);
+                          attachmentFile = imgFile;
                         });
                       }
                     },
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 15,
+                    icon: Icon(
+                      Icons.attachment_rounded,
+                    ),
+                  )
+                ],
               ),
               ElevatedButton(
                 onPressed: () {
-                  Quarantine temp = Quarantine(
-                    createdAt: DateTime.now(),
-                    updatedAt: DateTime.now(),
-                    quarantineFrom: _quarantineFrom,
-                    quarantineTo: _quarantineTo,
-                    docId: '',
-                    name: _name.text,
-                    ymaSection: _chosenSection,
-                    veng: _chosenVeng,
-                    contactor: _contactor.text,
-                    location: newLocation,
-                    createdBy: Creator(
-                      id: userCtrl.user.value.userId,
-                      name: userCtrl.user.value.name,
-                    ),
-                  );
-                  Get.dialog(Center(
-                    child: SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: CupertinoActivityIndicator(),
-                    ),
-                  ));
-                  FirebaseFirestore.instance
-                      .collection('quarantines')
-                      .add(temp.toJson())
-                      .then((value) {
+                  if (!_form.currentState!.validate()) {
+                    return null;
+                  }
+                  if (attachmentFile == null) {
+                    String desc = _description.text;
+                    String excerpt = desc.substring(0, 30);
+                    Notice model = Notice(
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                      docId: '',
+                      title: _title.text,
+                      desc: _description.text,
+                      excerpt: excerpt,
+                      attachmentType: attachType,
+                      attachmentLink: null,
+                      createdBy: Creator(
+                          id: userCtrl.user.value.userId,
+                          name: userCtrl.user.value.name),
+                    );
+                    _fire.collection('posts').add(model.toJson());
                     Get.back();
-                    Get.back();
-                    Get.snackbar('Success', 'Quarantine dahbelh a zo e');
+                  }
+                  var ctrl = Get.find<ImageController>();
+                  var upStream = ctrl.uploadImage(attachmentFile!);
+                  upStream.listen((event) async {
+                    switch (event.state) {
+                      case TaskState.paused:
+                        break;
+                      case TaskState.running:
+                        Get.dialog(Center(
+                          child: SizedBox(
+                            width: 25,
+                            height: 25,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ));
+                        break;
+                      case TaskState.success:
+                        String? _url;
+                        if (attachmentFile != null) {
+                          _url = await event.ref.getDownloadURL();
+                        }
+                        String desc = _description.text;
+                        String excerpt = desc.substring(0, 30);
+                        Notice model = Notice(
+                          createdAt: DateTime.now(),
+                          updatedAt: DateTime.now(),
+                          docId: '',
+                          title: _title.text,
+                          desc: _description.text,
+                          excerpt: excerpt,
+                          attachmentType: attachType,
+                          attachmentLink: _url,
+                          createdBy: Creator(
+                              id: userCtrl.user.value.userId,
+                              name: userCtrl.user.value.name),
+                        );
+                        _fire.collection('posts').add(model.toJson());
+                        Get.back();
+                        break;
+                      case TaskState.canceled:
+                        break;
+                      case TaskState.error:
+                        break;
+                    }
                   });
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Constants.primary,
@@ -344,45 +309,8 @@ class _AddNewNoticeState extends State<AddNewNotice> {
     );
   }
 
-  void _onMapCreated(GoogleMapController controller) async {
-    _mapController.complete(controller);
-    MarkerId markerId = MarkerId(_markerIdVal());
-    LatLng position = LatLng(23.7779, 92.7307);
-    Marker marker = Marker(
-        markerId: markerId,
-        position: position,
-        draggable: false,
-        onDragEnd: (value) {
-          print("New position " + value.toString());
-        });
-    setState(() {
-      _markers[markerId] = marker;
-    });
-
-    Future.delayed(Duration(seconds: 1), () async {
-      GoogleMapController controller = await _mapController.future;
-      controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: position,
-            zoom: 17.0,
-          ),
-        ),
-      );
-    });
-    setState(() {
-      newLocation = GeoPoint(position.latitude, position.longitude);
-    });
-  }
-
-  String _markerIdVal({bool increment = false}) {
-    String val = 'marker_id_$_markerIdCounter';
-    if (increment) _markerIdCounter++;
-    return val;
-  }
-
-  String _formatDate(DateTime date) {
-    var _new = DateFormat("dd-MMMM-yy").format(date);
-    return _new;
-  }
+  // String _formatDate(DateTime date) {
+  //   var _new = DateFormat("dd-MMMM-yy").format(date);
+  //   return _new;
+  // }
 }

@@ -57,10 +57,11 @@ class _HomeNoticesState extends State<HomeNotices> {
 
   void onLoading() async {
     late QuerySnapshot result;
+//TODO notice model diklo adjust ngai
     if (lastDoc != null) {
       try {
         result = await _fire
-            .collection('quarantines')
+            .collection('posts')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
             .startAfterDocument(lastDoc!)
@@ -82,9 +83,10 @@ class _HomeNoticesState extends State<HomeNotices> {
         print(e.toString());
       }
     } else {
+//TODO notice model diklo adjust ngai
       try {
         result = await _fire
-            .collection('quarantines')
+            .collection('posts')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
             .get();
