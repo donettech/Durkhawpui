@@ -231,6 +231,9 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                       docId: '',
+                      ngo: "lltf",
+                      claps: 0,
+                      viewCount: 0,
                       title: _title.text,
                       desc: _description.text,
                       excerpt: excerpt,
@@ -262,16 +265,19 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                         String? _url;
                         if (attachmentFile != null) {
                           _url = await event.ref.getDownloadURL();
+                          print(_url.toString());
                         }
                         String desc = _description.text;
-                        String excerpt = desc.substring(0, 30);
                         Notice model = Notice(
                           createdAt: DateTime.now(),
                           updatedAt: DateTime.now(),
                           docId: '',
+                          claps: 0,
+                          viewCount: 0,
+                          ngo: 'YMA',
                           title: _title.text,
                           desc: _description.text,
-                          excerpt: excerpt,
+                          excerpt: desc,
                           attachmentType: attachType,
                           attachmentLink: _url,
                           createdBy: Creator(

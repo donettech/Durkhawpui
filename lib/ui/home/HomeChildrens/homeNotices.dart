@@ -36,7 +36,7 @@ class _HomeNoticesState extends State<HomeNotices> {
       noticeList.clear();
     });
     QuerySnapshot result = await _fire
-        .collection('quarantines')
+        .collection('posts')
         .limit(fetchLimit)
         .orderBy('createdAt', descending: true)
         .get();
@@ -83,7 +83,6 @@ class _HomeNoticesState extends State<HomeNotices> {
         print(e.toString());
       }
     } else {
-//TODO notice model diklo adjust ngai
       try {
         result = await _fire
             .collection('posts')
