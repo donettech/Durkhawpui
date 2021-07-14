@@ -5,6 +5,7 @@ import 'package:durkhawpui/model/user.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/addNotice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -32,35 +33,35 @@ class _HomeNoticesState extends State<HomeNotices> {
   }
 
   void onRefresh() async {
-    setState(() {
-      noticeList.clear();
-    });
-    QuerySnapshot result = await _fire
+    var result = _fire
         .collection('posts')
         .limit(fetchLimit)
         .orderBy('createdAt', descending: true)
-        .get();
-    List<QueryDocumentSnapshot> docs = result.docs;
-    List<Notice> _temp = [];
-    docs.forEach((QueryDocumentSnapshot element) {
-      Notice temp = Notice.fromJson(element.data(), element.id);
-      _temp.add(temp);
+        .snapshots();
+    result.listen((event) {
+      setState(() {
+        noticeList.clear();
+      });
+      List<QueryDocumentSnapshot> docs = event.docs;
+      List<Notice> _temp = [];
+      docs.forEach((QueryDocumentSnapshot element) {
+        Notice temp = Notice.fromJson(element.data(), element.id);
+        _temp.add(temp);
+      });
+      if (docs.isNotEmpty) {
+        lastDoc = docs.last;
+      }
+      setState(() {
+        noticeList.addAll(_temp);
+      });
+      _refreshController.refreshCompleted();
     });
-    if (docs.isNotEmpty) {
-      lastDoc = docs.last;
-    }
-    setState(() {
-      noticeList.addAll(_temp);
-    });
-    _refreshController.refreshCompleted();
   }
 
   void onLoading() async {
-    late QuerySnapshot result;
-//TODO notice model diklo adjust ngai
     if (lastDoc != null) {
       try {
-        result = await _fire
+        QuerySnapshot result = await _fire
             .collection('posts')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
@@ -84,24 +85,27 @@ class _HomeNoticesState extends State<HomeNotices> {
       }
     } else {
       try {
-        result = await _fire
+        var result = _fire
             .collection('posts')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
-            .get();
-        List<QueryDocumentSnapshot> docs = result.docs;
-        List<Notice> _temp = [];
-        docs.forEach((QueryDocumentSnapshot element) {
-          Notice temp = Notice.fromJson(element.data(), element.id);
-          _temp.add(temp);
-        });
-        if (docs.isNotEmpty) {
-          setState(() {
-            lastDoc = docs.last;
-            noticeList.addAll(_temp);
+            .snapshots();
+        result.listen((event) {
+          noticeList.clear();
+          List<QueryDocumentSnapshot> docs = event.docs;
+          List<Notice> _temp = [];
+          docs.forEach((QueryDocumentSnapshot element) {
+            Notice temp = Notice.fromJson(element.data(), element.id);
+            _temp.add(temp);
           });
-        }
-        _refreshController.loadComplete();
+          if (docs.isNotEmpty) {
+            setState(() {
+              lastDoc = docs.last;
+              noticeList.addAll(_temp);
+            });
+          }
+          _refreshController.loadComplete();
+        });
       } catch (e) {
         print(e.toString());
       }
@@ -115,18 +119,45 @@ class _HomeNoticesState extends State<HomeNotices> {
         child: ListTile(
           title: Text(
             noticeList[index].title,
-          ),
-          subtitle: Text(noticeList[index].excerpt),
-          trailing: IconButton(
-            onPressed: () {
-              // Get.to(() => QuarantineDetails(
-              //       model: quarantines[index],
-              //     ));
-            },
-            icon: Icon(
-              Icons.arrow_forward_ios_rounded,
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
+          subtitle: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                noticeList[index].excerpt +
+                    noticeList[index].excerpt +
+                    noticeList[index].excerpt +
+                    noticeList[index].excerpt,
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(
+                height: 7,
+              ),
+              Text(
+                _formatDate(noticeList[index].createdAt),
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+          isThreeLine: true,
           onTap: () {
             // Get.to(() => QuarantineDetails(
             //       model: quarantines[index],
@@ -144,7 +175,7 @@ class _HomeNoticesState extends State<HomeNotices> {
       child: Scaffold(
         floatingActionButton:
             //TODO change role
-            (user.role == "user")
+            (user.role == "admin")
                 ? FloatingActionButton(
                     child: Icon(Icons.add),
                     onPressed: () {
@@ -166,7 +197,7 @@ class _HomeNoticesState extends State<HomeNotices> {
   }
 
   String _formatDate(DateTime date) {
-    var _new = DateFormat("dd-MMMM-yy").format(date);
+    var _new = DateFormat("dd-MMMM h:mm a").format(date);
     return _new;
   }
 }

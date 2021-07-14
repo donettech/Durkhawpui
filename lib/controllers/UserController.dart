@@ -17,7 +17,7 @@ class UserController extends GetxController {
 
   void getUserData({required User signedInUser}) async {
     var data = await _fire.doc(signedInUser.uid).get();
-    if (data.exists) {
+    if (!data.exists) {
       Member tempUser = Member(
         userId: signedInUser.uid,
         name: signedInUser.displayName ?? "Unavailable",

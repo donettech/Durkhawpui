@@ -33,34 +33,33 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
   }
 
   void onRefresh() async {
-    setState(() {
-      quarantines.clear();
-    });
-    QuerySnapshot result = await _fire
+    var result = await _fire
         .collection('quarantines')
         .limit(fetchLimit)
         .orderBy('createdAt', descending: true)
-        .get();
-    List<QueryDocumentSnapshot> docs = result.docs;
-    List<Quarantine> _temp = [];
-    docs.forEach((QueryDocumentSnapshot element) {
-      Quarantine temp = Quarantine.fromJson(element.data(), element.id);
-      _temp.add(temp);
+        .snapshots();
+    result.listen((event) {
+      quarantines.clear();
+      List<QueryDocumentSnapshot> docs = event.docs;
+      List<Quarantine> _temp = [];
+      docs.forEach((QueryDocumentSnapshot element) {
+        Quarantine temp = Quarantine.fromJson(element.data(), element.id);
+        _temp.add(temp);
+      });
+      if (docs.isNotEmpty) {
+        lastDoc = docs.last;
+      }
+      setState(() {
+        quarantines.addAll(_temp);
+      });
+      _refreshController.refreshCompleted();
     });
-    if (docs.isNotEmpty) {
-      lastDoc = docs.last;
-    }
-    setState(() {
-      quarantines.addAll(_temp);
-    });
-    _refreshController.refreshCompleted();
   }
 
   void onLoading() async {
-    late QuerySnapshot result;
     if (lastDoc != null) {
       try {
-        result = await _fire
+        QuerySnapshot result = await _fire
             .collection('quarantines')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
@@ -84,24 +83,27 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
       }
     } else {
       try {
-        result = await _fire
+        var result = _fire
             .collection('quarantines')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
-            .get();
-        List<QueryDocumentSnapshot> docs = result.docs;
-        List<Quarantine> _temp = [];
-        docs.forEach((QueryDocumentSnapshot element) {
-          Quarantine temp = Quarantine.fromJson(element.data(), element.id);
-          _temp.add(temp);
-        });
-        if (docs.isNotEmpty) {
-          setState(() {
-            lastDoc = docs.last;
-            quarantines.addAll(_temp);
+            .snapshots();
+        result.listen((event) {
+          quarantines.clear();
+          List<QueryDocumentSnapshot> docs = event.docs;
+          List<Quarantine> _temp = [];
+          docs.forEach((QueryDocumentSnapshot element) {
+            Quarantine temp = Quarantine.fromJson(element.data(), element.id);
+            _temp.add(temp);
           });
-        }
-        _refreshController.loadComplete();
+          if (docs.isNotEmpty) {
+            setState(() {
+              lastDoc = docs.last;
+              quarantines.addAll(_temp);
+            });
+          }
+          _refreshController.loadComplete();
+        });
       } catch (e) {
         print(e.toString());
       }
@@ -149,7 +151,7 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: //change role
-            (user.role == "user")
+            (user.role == "admin")
                 ? FloatingActionButton(
                     child: Icon(Icons.add),
                     onPressed: () {

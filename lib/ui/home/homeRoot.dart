@@ -78,7 +78,7 @@ class _HomeRootState extends State<HomeRoot> {
           ),
           BottomNavyBarItem(
             title: Text(
-              'Notices',
+              'Thuchhuah',
               style: GoogleFonts.roboto(
                 color: Colors.white,
               ),
