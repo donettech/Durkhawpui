@@ -33,16 +33,6 @@ class _HomeRootState extends State<HomeRoot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Get.find<SecureController>().storage.deleteAll().then((value) {
-      //     //   setState(() {});
-      //     // });
-      //     // FirebaseAuth.instance.signOut();
-      //     var user = Get.find<UserController>().user.value;
-      //     print(user.email);
-      //   },
-      // ),
       body: SizedBox.expand(
         child: PageView(
           controller: _pageController,

@@ -32,6 +32,7 @@ dependencies:
   bottom_navy_bar: ^6.0.0
   getwidget: ^2.0.2
   fab_circular_menu: ^1.0.2
+  
 
   firebase_core: ^1.0.4
   firebase_auth: ^1.1.1
@@ -90,6 +91,7 @@ flutter:
     - assets/cat2.png
     - assets/hello.png
     - assets/dp.png
+    - assets/clap.png
     # //TODO gpay integrate
     # - assets/default_payment_profile_google_pay.json
   #   - images/a_dot_ham.jpeg
