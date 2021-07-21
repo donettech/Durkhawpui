@@ -3,6 +3,7 @@ import 'package:durkhawpui/controllers/secureStorage.dart';
 import 'package:durkhawpui/model/user.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/aboutPage.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/editText.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/subPages/ngoList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -250,6 +251,24 @@ class _HomeSettingsState extends State<HomeSettings> {
                         size: 25,
                       ),
                     ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      'NGOs',
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    leading: IconButton(
+                      onPressed: () {
+                        Get.to(() => NgoListPage());
+                      },
+                      icon: Icon(
+                        Icons.people_alt,
+                        size: 25,
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(() => NgoListPage());
+                    },
                   ),
                   ListTile(
                     title: Text(

@@ -4,13 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/model/creator.dart';
+import 'package:durkhawpui/model/ngo.dart';
 import 'package:durkhawpui/model/notice.dart';
 import 'package:durkhawpui/utils/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:markdown_editable_textinput/markdown_text_input.dart';
 
 class AddNewNotice extends StatefulWidget {
   AddNewNotice({Key? key}) : super(key: key);
@@ -22,9 +25,11 @@ class AddNewNotice extends StatefulWidget {
 class _AddNewNoticeState extends State<AddNewNotice> {
   final userCtrl = Get.find<UserController>();
   final _title = TextEditingController();
-  final _description = TextEditingController();
-  final _form = GlobalKey<FormState>();
   final _fire = FirebaseFirestore.instance;
+  List<String> ngoList = [];
+  String? selectedNgo;
+
+  String description = "";
 
   PlatformFile? attachmentFile;
   int attachType = 0;
@@ -39,6 +44,20 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   @override
   void initState() {
     super.initState();
+    getNgos();
+  }
+
+  void getNgos() async {
+    var result =
+        await _fire.collection('ngos').orderBy('name', descending: true).get();
+    var docs = result.docs;
+    docs.forEach((element) {
+      NgoModel model = NgoModel.fromJson(element.data(), element.id);
+      ngoList.add(model.name);
+    });
+    setState(() {
+      if (ngoList.isNotEmpty) selectedNgo = ngoList.first;
+    });
   }
 
   @override
@@ -48,30 +67,34 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         title: Text("Thuchhuah thar siamna"),
         centerTitle: true,
       ),
-      body: Form(
-        key: _form,
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
                 height: 15,
+              ),
+              Align(alignment: Alignment.centerLeft, child: Text('Title')),
+              SizedBox(
+                height: 5,
               ),
               TextFormField(
                 controller: _title,
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(
-                  labelText: "Title",
                   hintText: "A thupui tawi fel takin",
                   fillColor: Colors.white,
                   border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(15.0),
-                    borderSide: new BorderSide(color: Constants.primary),
+                    borderRadius: new BorderRadius.circular(8.0),
+                    borderSide:
+                        new BorderSide(color: Theme.of(context).accentColor),
                   ),
                   enabledBorder: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(15.0),
-                    borderSide: new BorderSide(color: Constants.primary),
+                    borderRadius: new BorderRadius.circular(8.0),
+                    borderSide:
+                        new BorderSide(color: Theme.of(context).accentColor),
                   ),
                   //fillColor: Colors.green
                 ),
@@ -86,31 +109,98 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               SizedBox(
                 height: 10,
               ),
-              TextFormField(
-                controller: _description,
-                keyboardType: TextInputType.text,
-                decoration: new InputDecoration(
-                  labelText: "Description",
-                  labelStyle: TextStyle(),
-                  hintText: "A sawi zau na",
-                  fillColor: Colors.white,
-                  border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(15.0),
-                    borderSide: new BorderSide(color: Constants.primary),
-                  ),
-                  enabledBorder: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(15.0),
-                    borderSide: new BorderSide(color: Constants.primary),
-                  ),
-                ),
-                maxLines: 5,
-                validator: (val) {
-                  if (val?.length == 0) {
-                    return "Sawi zauna ziah a ngai";
-                  } else {
-                    return null;
-                  }
+              Align(
+                  alignment: Alignment.centerLeft, child: Text('Description')),
+              SizedBox(
+                height: 5,
+              ),
+              MarkdownTextInput(
+                (String value) {
+                  setState(() {
+                    description = value;
+                  });
                 },
+                description,
+                label: 'Description',
+                maxLines: 5,
+              ),
+              TextButton(
+                onPressed: () {
+                  if (description.length < 1) {
+                    return;
+                  }
+                  Get.dialog(Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        margin:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MarkdownBody(
+                              data: description,
+                              shrinkWrap: true,
+                              fitContent: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ));
+                },
+                child: Text("Check Preview"),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text('Chhuahtu NGO'),
+                  Spacer(),
+                  Expanded(
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        focusColor: Colors.white,
+                        value: selectedNgo,
+                        style: TextStyle(color: Colors.white),
+                        iconEnabledColor: Colors.white,
+                        items: ngoList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: Theme.of(context).textTheme.bodyText2,
+                              textAlign: TextAlign.start,
+                            ),
+                          );
+                        }).toList(),
+                        hint: Text(
+                          "Thlan a ngai",
+                          style: Theme.of(context).textTheme.bodyText2,
+                          textAlign: TextAlign.center,
+                        ),
+                        onChanged: (String? value) {
+                          if (value != null) {
+                            setState(() {
+                              selectedNgo = value;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  )
+                ],
               ),
               SizedBox(
                 height: 10,
@@ -119,6 +209,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                 children: [
                   Text("Notification "),
                   Spacer(),
+                  //TODO notification thawn ngai
                   Switch(
                       value: notiOn,
                       onChanged: (newValue) {
@@ -221,21 +312,49 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (!_form.currentState!.validate()) {
-                    return null;
+                  if (description.length < 1) {
+                    Get.snackbar(
+                      'Error',
+                      "Sawifiahna(Description) ziah angai",
+                      backgroundColor: Colors.red,
+                    );
+                    return;
+                  }
+                  if (selectedNgo == null) {
+                    Get.snackbar(
+                      'Error',
+                      "Thu chhuahtu NGO thlan angai",
+                      backgroundColor: Colors.red,
+                    );
+                    return;
+                  }
+                  // _title
+                  if (_title.text.isEmpty) {
+                    Get.snackbar(
+                      'Error',
+                      "Thupui(Title) ziah angai",
+                      backgroundColor: Colors.red,
+                    );
+                    return;
+                  }
+                  String regular =
+                      description.replaceAll(new RegExp(r'(?:_|[^\w\s])+'), '');
+                  String excerpt = "";
+                  if (regular.length > 15) {
+                    excerpt = regular.substring(0, 15);
+                  } else {
+                    excerpt = regular;
                   }
                   if (attachmentFile == null) {
-                    String desc = _description.text;
-                    String excerpt = desc.substring(0, 30);
                     Notice model = Notice(
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                       docId: '',
-                      ngo: "lltf",
+                      ngo: selectedNgo!,
                       claps: 0,
                       viewCount: 0,
                       title: _title.text,
-                      desc: _description.text,
+                      desc: description,
                       excerpt: excerpt,
                       attachmentType: attachType,
                       attachmentLink: null,
@@ -245,55 +364,58 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                     );
                     _fire.collection('posts').add(model.toJson());
                     Get.back();
+                  } else {
+                    var ctrl = Get.find<ImageController>();
+                    var upStream = ctrl.uploadImage(attachmentFile!);
+                    Get.dialog(Center(
+                      child: CupertinoActivityIndicator(),
+                    ));
+                    upStream.listen((event) async {
+                      switch (event.state) {
+                        case TaskState.paused:
+                          break;
+                        case TaskState.running:
+                          Get.dialog(Center(
+                            child: SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ));
+                          break;
+                        case TaskState.success:
+                          String? _url;
+                          if (attachmentFile != null) {
+                            _url = await event.ref.getDownloadURL();
+                            print(_url.toString());
+                          }
+                          Notice model = Notice(
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                            docId: '',
+                            claps: 0,
+                            viewCount: 0,
+                            ngo: selectedNgo!,
+                            title: _title.text,
+                            desc: description,
+                            excerpt: excerpt,
+                            attachmentType: attachType,
+                            attachmentLink: _url,
+                            createdBy: Creator(
+                                id: userCtrl.user.value.userId,
+                                name: userCtrl.user.value.name),
+                          );
+                          _fire.collection('posts').add(model.toJson());
+                          Get.back();
+                          Get.back();
+                          break;
+                        case TaskState.canceled:
+                          break;
+                        case TaskState.error:
+                          break;
+                      }
+                    });
                   }
-                  var ctrl = Get.find<ImageController>();
-                  var upStream = ctrl.uploadImage(attachmentFile!);
-                  upStream.listen((event) async {
-                    switch (event.state) {
-                      case TaskState.paused:
-                        break;
-                      case TaskState.running:
-                        Get.dialog(Center(
-                          child: SizedBox(
-                            width: 25,
-                            height: 25,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ));
-                        break;
-                      case TaskState.success:
-                        String? _url;
-                        if (attachmentFile != null) {
-                          _url = await event.ref.getDownloadURL();
-                          print(_url.toString());
-                        }
-                        String desc = _description.text;
-                        Notice model = Notice(
-                          createdAt: DateTime.now(),
-                          updatedAt: DateTime.now(),
-                          docId: '',
-                          claps: 0,
-                          viewCount: 0,
-                          ngo: 'YMA',
-                          title: _title.text,
-                          desc: _description.text,
-                          excerpt: desc,
-                          attachmentType: attachType,
-                          attachmentLink: _url,
-                          createdBy: Creator(
-                              id: userCtrl.user.value.userId,
-                              name: userCtrl.user.value.name),
-                        );
-                        _fire.collection('posts').add(model.toJson());
-                        Get.back();
-                        break;
-                      case TaskState.canceled:
-                        break;
-                      case TaskState.error:
-                        break;
-                    }
-                  });
-                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Constants.primary,
@@ -314,9 +436,4 @@ class _AddNewNoticeState extends State<AddNewNotice> {
       ),
     );
   }
-
-  // String _formatDate(DateTime date) {
-  //   var _new = DateFormat("dd-MMMM-yy").format(date);
-  //   return _new;
-  // }
 }

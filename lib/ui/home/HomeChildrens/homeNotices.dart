@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/notice.dart';
 import 'package:durkhawpui/model/user.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/test.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/addNotice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'subPages/NoticeDetail.dart';
 
 class HomeNotices extends StatefulWidget {
   const HomeNotices({Key? key}) : super(key: key);
@@ -159,9 +162,7 @@ class _HomeNoticesState extends State<HomeNotices> {
           contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
           isThreeLine: true,
           onTap: () {
-            // Get.to(() => QuarantineDetails(
-            //       model: quarantines[index],
-            //     ));
+            Get.to(() => NoticeDetails(notice: noticeList[index]));
           },
         ),
       ),
@@ -179,7 +180,8 @@ class _HomeNoticesState extends State<HomeNotices> {
                 ? FloatingActionButton(
                     child: Icon(Icons.add),
                     onPressed: () {
-                      Get.to(AddNewNotice());
+                      Get.to(() => AddNewNotice());
+                      // Get.to(() => Test());
                     },
                   )
                 : Container(),
@@ -197,7 +199,7 @@ class _HomeNoticesState extends State<HomeNotices> {
   }
 
   String _formatDate(DateTime date) {
-    var _new = DateFormat("dd-MMMM h:mm a").format(date);
+    var _new = DateFormat("h:mm a dd-MMMM-yy").format(date);
     return _new;
   }
 }
