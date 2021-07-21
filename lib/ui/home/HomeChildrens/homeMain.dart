@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/model/notice.dart';
-import 'package:durkhawpui/utils/constants.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'subPages/NoticeDetail.dart';
-import 'subPages/calendarEdit.dart';
 import 'widgets/dinhmun.dart';
 import 'widgets/todayData.dart';
 
@@ -43,11 +40,11 @@ class _HomeMainState extends State<HomeMain> {
         _temp.add(temp);
       });
       if (docs.isNotEmpty) {
-        setState(() {
-          _noticeList.addAll(_temp);
-          _noticeList.addAll(_temp);
-          _noticeList.addAll(_temp);
-        });
+        if (mounted) {
+          setState(() {
+            _noticeList.addAll(_temp);
+          });
+        }
       }
     });
   }

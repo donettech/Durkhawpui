@@ -33,7 +33,7 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
   }
 
   void onRefresh() async {
-    var result = await _fire
+    var result = _fire
         .collection('quarantines')
         .limit(fetchLimit)
         .orderBy('createdAt', descending: true)

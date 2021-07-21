@@ -15,9 +15,47 @@ class NoticeDetails extends StatefulWidget {
   _NoticeDetailsState createState() => _NoticeDetailsState();
 }
 
-class _NoticeDetailsState extends State<NoticeDetails> {
+class _NoticeDetailsState extends State<NoticeDetails>
+    with SingleTickerProviderStateMixin {
+  final _fire = FirebaseFirestore.instance.collection('posts');
   String description = '';
-  final _fire = FirebaseFirestore.instance;
+  double position = 50;
+  double size = 40;
+  bool loading = true;
+  int amount = 1;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void incrementClap() async {
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentReference postRef = _fire.doc(widget.notice.docId);
+      DocumentSnapshot snapshot = await transaction.get(postRef);
+      int clapCount = snapshot.data()!['claps'];
+      transaction.update(postRef, {"claps": clapCount + 1});
+    });
+  }
+
+  void clap() {
+    if (mounted) {
+      incrementClap();
+      setState(() {
+        position = 100;
+        size = 70;
+        loading = !loading;
+        amount++;
+      });
+      Future.delayed(Duration(milliseconds: 300)).then((value) {
+        setState(() {
+          position = 50;
+          size = 40;
+          loading = !loading;
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +68,7 @@ class _NoticeDetailsState extends State<NoticeDetails> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            widget.notice.desc = description;
-            _fire
-                .collection('posts')
-                .doc(widget.notice.docId)
-                .update(widget.notice.toJson());
-          },
+          onPressed: clap,
           child: SizedBox(
             width: 35,
             height: 35,
@@ -46,89 +78,157 @@ class _NoticeDetailsState extends State<NoticeDetails> {
             ),
           ),
         ),
-        body: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: 15,
-                    ),
-                    _buildAttachment(),
-                    if (widget.notice.attachmentType != 0) SizedBox(height: 15),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MarkdownBody(data: widget.notice.desc),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              widget.notice.ngo.toUpperCase(),
-                              style: GoogleFonts.roboto(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            Text(
-                              _formatDate(widget.notice.createdAt),
-                              style: GoogleFonts.roboto(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ],
-                        )),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.transparent, elevation: 0),
-                          child: Row(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildAttachment(),
+                      if (widget.notice.attachmentType != 0)
+                        SizedBox(height: 15),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Column(
                             mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              MarkdownBody(data: widget.notice.desc),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Text(
-                                widget.notice.claps.toString(),
+                                widget.notice.ngo.toUpperCase(),
                                 style: GoogleFonts.roboto(
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w300,
                                 ),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Image.asset(
-                                  'assets/clap.png',
-                                  color: Constants.primary,
+                              Text(
+                                _formatDate(widget.notice.createdAt),
+                                style: GoogleFonts.roboto(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
                                 ),
                               ),
                             ],
-                          ),
-                          onPressed: () {},
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                  ],
+                          )),
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.transparent, elevation: 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                StreamBuilder<Object>(
+                                    stream: _fire
+                                        .doc(widget.notice.docId)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        DocumentSnapshot snap =
+                                            snapshot.data as DocumentSnapshot;
+                                        print(snap);
+                                        Notice model = Notice.fromJson(
+                                            snap.data()!, snap.id);
+                                        return Text(
+                                          model.claps.toString(),
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        );
+                                      }
+                                      return Text(
+                                        widget.notice.claps.toString(),
+                                        style: GoogleFonts.roboto(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      );
+                                    }),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Image.asset(
+                                    'assets/clap.png',
+                                    color: Constants.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onPressed: clap,
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              AnimatedPositioned(
+                left: 0,
+                right: 0,
+                bottom: position,
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 100),
+                  child: loading
+                      ? Container(key: UniqueKey())
+                      : AnimatedContainer(
+                          width: size,
+                          height: size,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          duration: Duration(milliseconds: 300),
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "+" + amount.toString(),
+                                  style: GoogleFonts.roboto(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 25,
+                                  height: 25,
+                                  child: Image.asset(
+                                    'assets/clap.png',
+                                    color: Constants.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
+                duration: Duration(milliseconds: 300),
+              ),
+            ],
+          ),
         ));
   }
 
@@ -152,19 +252,24 @@ class _NoticeDetailsState extends State<NoticeDetails> {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.grey[300]!,
+                  width: 0.8,
                 ),
               ),
               width: double.infinity,
               child: CachedNetworkImage(
                 imageUrl: widget.notice.attachmentLink!,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Center(
-                  child: SizedBox(
-                    width: 25,
-                    height: 25,
-                    child: CircularProgressIndicator(
-                      value: downloadProgress.progress,
-                      strokeWidth: 0.8,
+                    SizedBox(
+                  width: double.infinity,
+                  height: 150,
+                  child: Center(
+                    child: SizedBox(
+                      width: 25,
+                      height: 25,
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        strokeWidth: 0.8,
+                      ),
                     ),
                   ),
                 ),

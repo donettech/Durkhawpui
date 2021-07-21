@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/notice.dart';
 import 'package:durkhawpui/model/user.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/test.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/addNotice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
