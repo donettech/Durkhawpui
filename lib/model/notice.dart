@@ -14,6 +14,8 @@ class Notice {
   late int viewCount;
   late String? attachmentLink;
   late int attachmentType;
+  late bool useMap;
+  late GeoPoint? geoPoint;
   /* 
   notice attachment types
   0=none
@@ -32,6 +34,8 @@ class Notice {
     required this.claps,
     required this.viewCount,
     required this.attachmentType,
+    required this.useMap,
+    required this.geoPoint,
     required this.attachmentLink,
   });
   Notice.fromJson(Map<String, dynamic> json, String documentId)
@@ -47,6 +51,8 @@ class Notice {
           claps: json['claps'] as int,
           viewCount: json['viewCount'] as int,
           attachmentType: json['attachmentType'] as int,
+          useMap: json['useMap'],
+          geoPoint: json['geoPoint'],
           attachmentLink: json['attachmentLink'],
         );
   Map<String, Object?> toJson() {
@@ -62,6 +68,8 @@ class Notice {
       "viewCount": viewCount,
       "attachmentType": attachmentType,
       'attachmentLink': attachmentLink,
+      'useMap': useMap,
+      'geoPoint': geoPoint,
     };
   }
 }
