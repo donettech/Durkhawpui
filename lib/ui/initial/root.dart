@@ -33,7 +33,6 @@ class _RootState extends State<Root> {
 
   listenAuth() async {
     var isFirstTime = await secure.isFirstTime();
-    print("First time " + isFirstTime.toString());
     if (isFirstTime is bool && isFirstTime) {
       Get.offAll(() => SignIn());
       return true;

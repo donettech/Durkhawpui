@@ -6,14 +6,14 @@ import 'package:get/get.dart';
 class UserController extends GetxController {
   final _fire = FirebaseFirestore.instance.collection('users');
   var user = Member(
-          userId: '',
-          name: 'Guest',
-          email: '',
-          phone: '',
-          role: 'user',
-          avatarUrl: "",
-          createdAt: DateTime.now())
-      .obs;
+    userId: '',
+    name: 'Guest',
+    email: '',
+    phone: '',
+    role: 'user',
+    avatarUrl: "",
+    createdAt: DateTime.now(),
+  ).obs;
 
   void getUserData({required User signedInUser}) async {
     var data = await _fire.doc(signedInUser.uid).get();

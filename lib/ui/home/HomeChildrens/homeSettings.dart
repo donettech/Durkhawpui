@@ -4,6 +4,7 @@ import 'package:durkhawpui/model/user.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/aboutPage.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/editText.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/subPages/ngoList.dart';
+import 'package:durkhawpui/ui/initial/signIn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -328,6 +329,18 @@ class _HomeSettingsState extends State<HomeSettings> {
                                       ),
                                       TextButton(
                                         onPressed: () {
+                                          var _guest = Member(
+                                            userId: '',
+                                            name: 'Guest',
+                                            email: '',
+                                            phone: '',
+                                            role: 'user',
+                                            avatarUrl: "",
+                                            createdAt: DateTime.now(),
+                                          );
+                                          setState(() {
+                                            _userCtrl.user.value = _guest;
+                                          });
                                           Get.back();
                                         },
                                         child: Text(
@@ -342,7 +355,7 @@ class _HomeSettingsState extends State<HomeSettings> {
                           ),
                         ));
                       } else {
-                        //sign in
+                        Get.to(SignIn());
                       }
                     },
                     child: Text(

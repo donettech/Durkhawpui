@@ -49,13 +49,21 @@ class _SignInState extends State<SignIn> {
       setState(() {
         loading = false;
       });
-      Get.snackbar('Error', e.message.toString(), backgroundColor: Colors.red);
+      Get.snackbar(
+        'Error',
+        e.message.toString(),
+        backgroundColor: Colors.red,
+      );
       throw e;
     } catch (error) {
       setState(() {
         loading = false;
       });
-      Get.snackbar('Error', error.toString(), backgroundColor: Colors.red);
+      Get.snackbar(
+        'Sign-in Error',
+        'Sign-in a fuh loa, tih that leh angai',
+        backgroundColor: Colors.red,
+      );
     }
   }
 
