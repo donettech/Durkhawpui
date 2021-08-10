@@ -121,85 +121,51 @@ class ImageController extends GetxController {
       allowCompression: true,
       allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
     );
-    //TODO check if unsupported files can be selected
     if (result != null) {
-      return result.files.first;
+      if (result.files.length > 1) {
+        Get.snackbar(
+          "Error",
+          "File pakhat choh thlan phal ani",
+          backgroundColor: Colors.red,
+        );
+        return null;
+      }
+      if (result.files.first.extension == "jpg" ||
+          result.files.first.extension == "jpeg" ||
+          result.files.first.extension == "png" ||
+          result.files.first.extension == "pdf") {
+        return result.files.first;
+      }
+      Get.snackbar(
+        "Error",
+        "Thlalak/PDF chiah a thlan theih (pdf/jpg/jpeg/png extensions only)",
+        backgroundColor: Colors.red,
+      );
+      return null;
     } else
       return null;
   }
 
   Stream<storage.TaskSnapshot> uploadImage(PlatformFile file) {
     storage.UploadTask uploadTask;
-    var fileName = DateTime.now().millisecondsSinceEpoch.toString() + ".jpg";
+    var ext = file.extension;
+    late String _contentType;
+    if (ext == "pdf") {
+      _contentType = "file/pdf";
+    } else {
+      _contentType = "image/jpeg";
+    }
+    var fileName =
+        DateTime.now().millisecondsSinceEpoch.toString() + "." + ext!;
     storage.Reference ref = storage.FirebaseStorage.instance
         .ref()
         .child('Posts')
         .child('/$fileName');
     io.File _newFile = io.File(file.path!);
     final metadata = storage.SettableMetadata(
-        contentType: 'image/jpeg',
+        contentType: _contentType,
         customMetadata: {'picked-file-path': _newFile.path});
     uploadTask = ref.putFile(io.File(_newFile.path), metadata);
     return uploadTask.asStream();
   }
-
-  // void _uploadImage({required Function(File file) onDone}) {
-  //   var uploadInput = FileUploadInputElement()..accept = "image/*";
-  //   uploadInput.click();
-  //   uploadInput.onChange.listen((event) {
-  //     final file = uploadInput.files!.first;
-  //     final reader = FileReader();
-  //     reader.readAsDataUrl(file);
-  //     reader.onLoadEnd.listen((event) {
-  //       print("DOne upload to flutter web");
-  //       onDone(file);
-  //     });
-  //   });
-  // }
-
-  // void uploadToStorage(
-  //     {required String path, required Function(String file) onURLGenerated}) {
-  //   var date = DateTime.now().millisecondsSinceEpoch.toString() + ".jpg";
-  //   _uploadImage(onDone: (File file) {
-  //     Get.dialog(Center(
-  //       child: Material(
-  //         child: Container(
-  //           padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               SizedBox(
-  //                 width: 25,
-  //                 height: 25,
-  //                 child: CircularProgressIndicator(
-  //                   strokeWidth: 1,
-  //                 ),
-  //               ),
-  //               SizedBox(
-  //                 height: 15,
-  //               ),
-  //               Text("Uploading image please wait..."),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ));
-  //     storageRef.storage
-  //         .refFromURL('gs://kumtluang-18bba.appspot.com')
-  //         .child(path + date)
-  //         .putBlob(file)
-  //         .then((result) {
-  //       result.ref.getDownloadURL().then((url) {
-  //         onURLGenerated(url);
-  //         Get.back();
-  //       });
-  //     });
-  //   });
-  // }
-
-  // void deleteImage({required String imagePath}) async {
-  //   var newRef =
-  //       firebase_storage.FirebaseStorage.instance.refFromURL(imagePath);
-  //   newRef.delete();
-  // }
 }

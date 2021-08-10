@@ -62,6 +62,8 @@ dependencies:
 
   flutter_secure_storage: ^4.2.0
 
+  flutter_cached_pdfview: ^0.4.0-nullsafety
+
   # gpay plugin
   # pay: ^1.0.5
 

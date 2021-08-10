@@ -1,7 +1,7 @@
 import 'package:durkhawpui/model/quarantine.dart';
+import 'package:durkhawpui/ui/commonWidgets/markerMap.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 class QuarantineDetails extends StatefulWidget {
@@ -13,7 +13,6 @@ class QuarantineDetails extends StatefulWidget {
 }
 
 class _QuarantineDetailsState extends State<QuarantineDetails> {
-  Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,18 +49,9 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
               height: 10,
             ),
             Expanded(
-              // height: Get.height * 0.5,
-              child: GoogleMap(
-                mapType: MapType.hybrid,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                    widget.model.location.latitude,
-                    widget.model.location.longitude,
-                  ),
-                  zoom: 18,
-                ),
-                markers: Set<Marker>.of(_markers.values),
-                onMapCreated: _onMapCreated,
+              child: MarkerMap(
+                height: 250,
+                point: widget.model.location,
               ),
             ),
             Padding(
@@ -138,34 +128,6 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
         ),
       ),
     );
-  }
-
-  void _onMapCreated(GoogleMapController controller) async {
-    MarkerId markerId = MarkerId("UniqueId");
-    LatLng position =
-        LatLng(widget.model.location.latitude, widget.model.location.longitude);
-    Marker marker = Marker(
-        markerId: markerId,
-        position: position,
-        draggable: false,
-        onDragEnd: (value) {
-          print("New position " + value.toString());
-        });
-    setState(() {
-      _markers[markerId] = marker;
-    });
-
-    // Future.delayed(Duration(seconds: 1), () async {
-    //   GoogleMapController controller = await _mapController.future;
-    //   controller.animateCamera(
-    //     CameraUpdate.newCameraPosition(
-    //       CameraPosition(
-    //         target: position,
-    //         zoom: 17.0,
-    //       ),
-    //     ),
-    //   );
-    // });
   }
 
   String _formatDate(DateTime date) {

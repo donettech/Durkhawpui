@@ -56,6 +56,7 @@ class SelectMapGeoState extends State<SelectMapGeo> {
             child: GoogleMap(
               markers: Set<Marker>.of(_markers.values),
               onMapCreated: _onMapCreated,
+              mapType: MapType.hybrid,
               initialCameraPosition: CameraPosition(
                 target:
                     LatLng(widget.location.latitude, widget.location.longitude),

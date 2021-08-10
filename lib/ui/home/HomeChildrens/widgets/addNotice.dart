@@ -333,6 +333,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                               Expanded(
                                 child: IconButton(
                                   onPressed: () {
+                                    attachType = 1;
                                     Get.back(result: true);
                                   },
                                   icon: Icon(
@@ -357,6 +358,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               }
             } else {
               setState(() {
+                attachType = 2;
                 attachmentFile = imgFile;
               });
             }

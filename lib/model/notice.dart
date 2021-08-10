@@ -15,6 +15,7 @@ class Notice {
   late String? attachmentLink;
   late int attachmentType;
   late bool useMap;
+  String? dynamicLink;
   late GeoPoint? geoPoint;
   /* 
   notice attachment types
@@ -36,6 +37,7 @@ class Notice {
     required this.attachmentType,
     required this.useMap,
     required this.geoPoint,
+    this.dynamicLink,
     required this.attachmentLink,
   });
   Notice.fromJson(Map<String, dynamic> json, String documentId)
@@ -54,6 +56,7 @@ class Notice {
           useMap: json['useMap'],
           geoPoint: json['geoPoint'],
           attachmentLink: json['attachmentLink'],
+          dynamicLink: json['dynamicLink'],
         );
   Map<String, Object?> toJson() {
     return {
@@ -70,6 +73,7 @@ class Notice {
       'attachmentLink': attachmentLink,
       'useMap': useMap,
       'geoPoint': geoPoint,
+      "dynamicLink": dynamicLink,
     };
   }
 }

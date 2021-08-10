@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/model/notice.dart';
+import 'package:durkhawpui/ui/commonWidgets/markerMap.dart';
+import 'package:durkhawpui/ui/commonWidgets/pdfPage.dart';
 import 'package:durkhawpui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 
 class NoticeDetails extends StatefulWidget {
   final Notice notice;
@@ -96,9 +100,6 @@ class _NoticeDetailsState extends State<NoticeDetails>
                       SizedBox(
                         height: 15,
                       ),
-                      _buildAttachment(),
-                      if (widget.notice.attachmentType != 0)
-                        SizedBox(height: 15),
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(
@@ -109,6 +110,42 @@ class _NoticeDetailsState extends State<NoticeDetails>
                               SizedBox(
                                 height: 10,
                               ),
+                              if (widget.notice.attachmentType != 0)
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Attachment: ",
+                                      style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, bottom: 15),
+                                      child: _buildAttachment(),
+                                    ),
+                                  ],
+                                ),
+                              if (widget.notice.useMap)
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Map Location: ",
+                                      style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, bottom: 15),
+                                      child: _buildMap(),
+                                    ),
+                                  ],
+                                ),
                               Text(
                                 widget.notice.ngo.toUpperCase(),
                                 style: GoogleFonts.roboto(
@@ -127,14 +164,22 @@ class _NoticeDetailsState extends State<NoticeDetails>
                           )),
                       SizedBox(height: 15),
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: MainAxisSize.max,
                         children: [
+                          SizedBox(
+                            width: 15,
+                          ),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.transparent, elevation: 0),
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Constants.fabColor),
+                            ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                SizedBox(
+                                  width: 8,
+                                ),
                                 StreamBuilder<Object>(
                                     stream: _fire
                                         .doc(widget.notice.docId)
@@ -151,6 +196,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
                                           style: GoogleFonts.roboto(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w300,
+                                            color: Colors.black,
                                           ),
                                         );
                                       }
@@ -159,6 +205,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
                                         style: GoogleFonts.roboto(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w300,
+                                          color: Colors.black,
                                         ),
                                       );
                                     }),
@@ -170,12 +217,47 @@ class _NoticeDetailsState extends State<NoticeDetails>
                                   height: 30,
                                   child: Image.asset(
                                     'assets/clap.png',
-                                    color: Constants.primary,
+                                    color: Colors.black,
                                   ),
+                                ),
+                                SizedBox(
+                                  width: 8,
                                 ),
                               ],
                             ),
                             onPressed: clap,
+                          ),
+                          Spacer(),
+                          ElevatedButton.icon(
+                            onPressed: () async {
+                              //TODO create dynamic link
+                              print(widget.notice.dynamicLink.toString());
+                              final box =
+                                  context.findRenderObject() as RenderBox?;
+                              await Share.share(
+                                  'https://msrmarket.page.link/tV2GBkydxtLFMxh17',
+                                  subject: widget.notice.title,
+                                  sharePositionOrigin:
+                                      box!.localToGlobal(Offset.zero) &
+                                          box.size);
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Constants.fabColor),
+                            ),
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.black,
+                            ),
+                            label: Text(
+                              "Share",
+                              style: GoogleFonts.roboto(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
                           )
                         ],
                       ),
@@ -232,6 +314,15 @@ class _NoticeDetailsState extends State<NoticeDetails>
         ));
   }
 
+  Widget _buildMap() {
+    return Container(
+      child: MarkerMap(
+        height: 250,
+        point: widget.notice.geoPoint!,
+      ),
+    );
+  }
+
   Widget _buildAttachment() {
     /* 
   notice attachment types
@@ -246,16 +337,20 @@ class _NoticeDetailsState extends State<NoticeDetails>
         }
       case 1:
         {
-          return InkWell(
-            onTap: () {},
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey[300]!,
-                  width: 0.8,
-                ),
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey[300]!,
+                width: 0.8,
               ),
-              width: double.infinity,
+            ),
+            width: double.infinity,
+            child: InteractiveViewer(
+              panEnabled: false,
+              boundaryMargin: EdgeInsets.all(0),
+              minScale: 0.5,
+              maxScale: 4,
+              scaleEnabled: true,
               child: CachedNetworkImage(
                 imageUrl: widget.notice.attachmentLink!,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -281,7 +376,14 @@ class _NoticeDetailsState extends State<NoticeDetails>
       case 2:
         {
           return IconButton(
-            onPressed: () {},
+            onPressed: () {
+              print(widget.notice.attachmentLink);
+              Get.to(
+                PdfPage(
+                  pdfLink: widget.notice.attachmentLink!,
+                ),
+              );
+            },
             icon: Icon(
               Icons.picture_as_pdf,
               color: Colors.orange,
