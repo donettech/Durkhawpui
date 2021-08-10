@@ -101,8 +101,8 @@ class _AddNewNoticeState extends State<AddNewNotice> {
     }
     String regular = description.replaceAll(new RegExp(r'(?:_|[^\w\s])+'), '');
     String excerpt = "";
-    if (regular.length > 15) {
-      excerpt = regular.substring(0, 15);
+    if (regular.length > 100) {
+      excerpt = regular.substring(0, 100);
     } else {
       excerpt = regular;
     }
