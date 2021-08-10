@@ -173,6 +173,10 @@ class _HomeNoticesState extends State<HomeNotices> {
     Member user = userCtrl.user.value;
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Thuchhuah te'),
+          centerTitle: true,
+        ),
         floatingActionButton:
             //TODO change role
             (user.role == "admin")

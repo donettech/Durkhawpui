@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class SelectMapGeo extends StatefulWidget {
   final GeoPoint location;
@@ -119,36 +118,34 @@ class SelectMapGeoState extends State<SelectMapGeo> {
 
   void _onMapCreated(GoogleMapController controller) async {
     _mapController.complete(controller);
-    if ([widget.location] != null) {
-      MarkerId markerId = MarkerId(_markerIdVal());
-      LatLng position =
-          LatLng(widget.location.latitude, widget.location.longitude);
-      Marker marker = Marker(
-          markerId: markerId,
-          position: position,
-          draggable: false,
-          onDragEnd: (value) {
-            print("New position " + value.toString());
-          });
-      setState(() {
-        _markers[markerId] = marker;
-      });
+    MarkerId markerId = MarkerId(_markerIdVal());
+    LatLng position =
+        LatLng(widget.location.latitude, widget.location.longitude);
+    Marker marker = Marker(
+        markerId: markerId,
+        position: position,
+        draggable: false,
+        onDragEnd: (value) {
+          print("New position " + value.toString());
+        });
+    setState(() {
+      _markers[markerId] = marker;
+    });
 
-      Future.delayed(Duration(seconds: 1), () async {
-        GoogleMapController controller = await _mapController.future;
-        controller.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: position,
-              zoom: 17.0,
-            ),
+    Future.delayed(Duration(seconds: 1), () async {
+      GoogleMapController controller = await _mapController.future;
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: position,
+            zoom: 17.0,
           ),
-        );
-      });
-      setState(() {
-        newLocation = GeoPoint(position.latitude, position.longitude);
-      });
-    }
+        ),
+      );
+    });
+    setState(() {
+      newLocation = GeoPoint(position.latitude, position.longitude);
+    });
   }
 
   String _markerIdVal({bool increment = false}) {

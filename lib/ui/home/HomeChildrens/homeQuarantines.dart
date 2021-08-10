@@ -150,6 +150,10 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
     Member user = userCtrl.user.value;
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Quarantine te'),
+          centerTitle: true,
+        ),
         floatingActionButton: //change role
             (user.role == "admin")
                 ? FloatingActionButton(

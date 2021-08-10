@@ -54,15 +54,23 @@ class _HomeRootState extends State<HomeRoot> {
           setState(() => _currentIndex = index);
           _pageController.jumpToPage(index);
         },
+        animationDuration: Duration(milliseconds: 800),
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
             title: Text(
               'Home',
               style: GoogleFonts.roboto(
-                color: Colors.white,
+                color: _currentIndex == 0
+                    ? Constants.tabBarSelectedColor
+                    : Colors.white,
               ),
             ),
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              color: _currentIndex == 0
+                  ? Constants.tabBarSelectedColor
+                  : Colors.white,
+            ),
             activeColor: Constants.primary,
             inactiveColor: Colors.black87,
           ),
@@ -70,10 +78,17 @@ class _HomeRootState extends State<HomeRoot> {
             title: Text(
               'Thuchhuah',
               style: GoogleFonts.roboto(
-                color: Colors.white,
+                color: _currentIndex == 1
+                    ? Constants.tabBarSelectedColor
+                    : Colors.white,
               ),
             ),
-            icon: Icon(Icons.list),
+            icon: Icon(
+              Icons.list,
+              color: _currentIndex == 1
+                  ? Constants.tabBarSelectedColor
+                  : Colors.white,
+            ),
             activeColor: Constants.primary,
             inactiveColor: Colors.black87,
           ),
@@ -81,10 +96,17 @@ class _HomeRootState extends State<HomeRoot> {
             title: Text(
               'Quarantines',
               style: GoogleFonts.roboto(
-                color: Colors.white,
+                color: _currentIndex == 2
+                    ? Constants.tabBarSelectedColor
+                    : Colors.white,
               ),
             ),
-            icon: Icon(Icons.person_outlined),
+            icon: Icon(
+              Icons.people_alt_outlined,
+              color: _currentIndex == 2
+                  ? Constants.tabBarSelectedColor
+                  : Colors.white,
+            ),
             activeColor: Constants.primary,
             inactiveColor: Colors.black87,
           ),
@@ -92,10 +114,17 @@ class _HomeRootState extends State<HomeRoot> {
             title: Text(
               'Settings',
               style: GoogleFonts.roboto(
-                color: Colors.white,
+                color: _currentIndex == 3
+                    ? Constants.tabBarSelectedColor
+                    : Colors.white,
               ),
             ),
-            icon: Icon(Icons.settings),
+            icon: Icon(
+              Icons.settings,
+              color: _currentIndex == 3
+                  ? Constants.tabBarSelectedColor
+                  : Colors.white,
+            ),
             activeColor: Constants.primary,
             inactiveColor: Colors.black87,
           ),

@@ -183,6 +183,9 @@ class _HomeSettingsState extends State<HomeSettings> {
                           trailing: Switch(
                               value: isOn,
                               onChanged: (value) {
+                                setState(() {
+                                  isOn = value;
+                                });
                                 Get.find<SecureController>()
                                     .switchNoti(newValue: value)
                                     .then((value) {
@@ -196,6 +199,16 @@ class _HomeSettingsState extends State<HomeSettings> {
                               size: 25,
                             ),
                           ),
+                          onTap: () {
+                            setState(() {
+                              isOn = !isOn;
+                            });
+                            Get.find<SecureController>()
+                                .switchNoti(newValue: isOn)
+                                .then((value) {
+                              setState(() {});
+                            });
+                          },
                         );
                       }
                       return ListTile(
@@ -232,6 +245,13 @@ class _HomeSettingsState extends State<HomeSettings> {
                         size: 25,
                       ),
                     ),
+                    onTap: () async {
+                      final String _url =
+                          "https://play.google.com/store/apps/details?id=com.durtlang.app";
+                      await canLaunch(_url)
+                          ? await launch(_url)
+                          : throw 'Could not launch ';
+                    },
                   ),
                   ListTile(
                     title: Text(
@@ -252,6 +272,9 @@ class _HomeSettingsState extends State<HomeSettings> {
                         size: 25,
                       ),
                     ),
+                    onTap: () {
+                      //TODO TnC link dah tur
+                    },
                   ),
                   ListTile(
                     title: Text(
