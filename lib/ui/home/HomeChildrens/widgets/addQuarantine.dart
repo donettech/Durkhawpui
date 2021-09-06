@@ -24,7 +24,6 @@ class _AddQuarantineDialogState extends State<AddQuarantineDialog> {
   final _contactor = TextEditingController();
   final _form = GlobalKey<FormState>();
   late DateTime _quarantineFrom;
-  late DateTime _quarantineTo;
   Completer<GoogleMapController> _mapController = Completer();
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   int _markerIdCounter = 0;
@@ -58,7 +57,6 @@ class _AddQuarantineDialogState extends State<AddQuarantineDialog> {
   void initState() {
     super.initState();
     _quarantineFrom = DateTime.now();
-    _quarantineTo = DateTime.now().add(Duration(days: 10));
   }
 
   @override
@@ -222,23 +220,6 @@ class _AddQuarantineDialogState extends State<AddQuarantineDialog> {
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Quarantine tawp ni"),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.date_range_outlined,
-                          ),
-                        ),
-                        Text(
-                          _formatDate(_quarantineTo),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
               Container(
@@ -297,7 +278,6 @@ class _AddQuarantineDialogState extends State<AddQuarantineDialog> {
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                       quarantineFrom: _quarantineFrom,
-                      quarantineTo: _quarantineTo,
                       docId: '',
                       name: _name.text,
                       ymaSection: _chosenSection,

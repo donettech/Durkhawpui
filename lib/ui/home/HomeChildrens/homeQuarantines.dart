@@ -121,24 +121,28 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
           subtitle: Row(
             children: [
               Text(_formatDate(quarantines[index].quarantineFrom)),
-              Text(" to "),
-              Text(_formatDate(quarantines[index].quarantineTo)),
             ],
           ),
           trailing: IconButton(
             onPressed: () {
-              Get.to(() => QuarantineDetails(
-                    model: quarantines[index],
-                  ));
+              Get.dialog(QuarantineDetailDialog(
+                model: quarantines[index],
+              ));
+              // Get.to(() => QuarantineDetailDialog(
+              //       model: quarantines[index],
+              //     ));
             },
             icon: Icon(
               Icons.arrow_forward_ios_rounded,
             ),
           ),
           onTap: () {
-            Get.to(() => QuarantineDetails(
-                  model: quarantines[index],
-                ));
+            Get.dialog(QuarantineDetailDialog(
+              model: quarantines[index],
+            ));
+            // Get.to(() => QuarantineDetailDialog(
+            //       model: quarantines[index],
+            //     ));
           },
         ),
       ),

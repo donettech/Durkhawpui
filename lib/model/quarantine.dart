@@ -5,7 +5,6 @@ class Quarantine {
   late DateTime createdAt;
   late DateTime updatedAt;
   late DateTime quarantineFrom;
-  late DateTime quarantineTo;
   late String docId;
   late String name;
   late String veng;
@@ -18,7 +17,6 @@ class Quarantine {
     required this.createdAt,
     required this.updatedAt,
     required this.quarantineFrom,
-    required this.quarantineTo,
     required this.docId,
     required this.name,
     required this.veng,
@@ -36,7 +34,6 @@ class Quarantine {
           createdAt: (json['createdAt']! as Timestamp).toDate(),
           updatedAt: (json['updatedAt'] as Timestamp).toDate(),
           quarantineFrom: (json['quarantineFrom']! as Timestamp).toDate(),
-          quarantineTo: (json['quarantineTo'] as Timestamp).toDate(),
           ymaSection: json['ymaSection'] as String,
           veng: json['veng'] as String,
           createdBy: Creator.fromJson(
@@ -51,7 +48,6 @@ class Quarantine {
       "createdAt": createdAt,
       "updatedAt": updatedAt,
       "quarantineFrom": quarantineFrom,
-      "quarantineTo": quarantineTo,
       "ymaSection": ymaSection,
       'veng': veng,
       'createdBy': createdBy.toJson()
