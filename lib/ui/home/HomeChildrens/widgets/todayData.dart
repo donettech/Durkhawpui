@@ -1,52 +1,70 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/controllers/timeController.dart';
 import 'package:durkhawpui/model/calendar.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/subPages/calendarEdit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class TodayData extends StatelessWidget {
-  const TodayData({Key? key}) : super(key: key);
+class TodayData extends StatefulWidget {
+  TodayData({Key? key}) : super(key: key);
+
+  @override
+  _TodayDataState createState() => _TodayDataState();
+}
+
+class _TodayDataState extends State<TodayData> {
+  final userCtrl = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        width: double.infinity,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GetBuilder<TimeController>(
-              id: 'aVeryUniqueID',
-              init: TimeController(),
-              builder: (value) => Text(
-                '${value.timeString.value}: ',
-                style: GoogleFonts.roboto(
-                  fontSize: 20,
+        child: Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          width: double.infinity,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GetBuilder<TimeController>(
+                id: 'aVeryUniqueID',
+                init: TimeController(),
+                builder: (value) => Text(
+                  '${value.timeString.value}: ',
+                  style: GoogleFonts.roboto(
+                    fontSize: 20,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            FutureBuilder(
-              future: FirebaseFirestore.instance
-                  .collection('calendar')
-                  .doc('item')
-                  .get(),
-              builder: (context, snap) {
-                if (snap.hasData) {
-                  DocumentSnapshot snapshot = snap.data as DocumentSnapshot;
-                  if (snapshot.exists) {
-                    CalendarModel _temp =
-                        CalendarModel.fromJson(snapshot.data()!, snapshot.id);
+              SizedBox(
+                width: 5,
+              ),
+              FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection('home')
+                    .doc('calendar')
+                    .get(),
+                builder: (context, snap) {
+                  if (snap.hasData) {
+                    DocumentSnapshot snapshot = snap.data as DocumentSnapshot;
+                    if (snapshot.exists) {
+                      CalendarModel _temp =
+                          CalendarModel.fromJson(snapshot.data()!, snapshot.id);
+                      return Text(
+                        _textForDay(_temp),
+                        style: GoogleFonts.ebGaramond(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      );
+                    }
                     return Text(
-                      _textForDay(_temp),
-                      style: GoogleFonts.ebGaramond(
+                      '',
+                      style: GoogleFonts.roboto(
                         fontSize: 16,
-                        fontWeight: FontWeight.w400,
                       ),
                     );
                   }
@@ -56,19 +74,25 @@ class TodayData extends StatelessWidget {
                       fontSize: 16,
                     ),
                   );
-                }
-                return Text(
-                  '',
-                  style: GoogleFonts.roboto(
-                    fontSize: 16,
-                  ),
-                );
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+        Positioned(
+          right: 5,
+          child: (userCtrl.user.value.role == "admin")
+              ? IconButton(
+                  onPressed: () async {
+                    var res = await Get.to(() => CalendarEdit());
+                    setState(() {});
+                  },
+                  icon: Icon(Icons.mode_edit_rounded),
+                )
+              : Container(),
+        ),
+      ],
+    ));
   }
 
   String _textForDay(CalendarModel calendar) {

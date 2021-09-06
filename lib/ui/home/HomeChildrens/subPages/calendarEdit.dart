@@ -37,7 +37,7 @@ class _CalendarEditState extends State<CalendarEdit> {
   }
 
   void getCalendar() async {
-    var result = await _fire.collection('calendar').doc('item').get();
+    var result = await _fire.collection('home').doc('calendar').get();
     if (result.exists) {
       CalendarModel _temp = CalendarModel.fromJson(
         result.data()!,
@@ -79,8 +79,8 @@ class _CalendarEditState extends State<CalendarEdit> {
       sun: _sun.text,
     );
     _fire
-        .collection('calendar')
-        .doc(model.docId)
+        .collection('home')
+        .doc('calendar')
         .set(model.toJson(), SetOptions(merge: true));
     Get.back();
   }
