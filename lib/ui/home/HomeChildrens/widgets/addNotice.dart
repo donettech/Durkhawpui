@@ -403,7 +403,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                   value: value,
                   child: Text(
                     value,
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.caption,
                     textAlign: TextAlign.start,
                   ),
                 );

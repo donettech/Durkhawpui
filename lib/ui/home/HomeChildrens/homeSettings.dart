@@ -1,10 +1,13 @@
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';
 import 'package:durkhawpui/model/user.dart';
+import 'package:durkhawpui/ui/commonWidgets/dialogCommon.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/aboutPage.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/editText.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/subPages/ngoList.dart';
 import 'package:durkhawpui/ui/initial/signIn.dart';
+import 'package:durkhawpui/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -317,69 +320,7 @@ class _HomeSettingsState extends State<HomeSettings> {
                   ),
                   TextButton(
                     onPressed: () {
-                      if (signedIn) {
-                        //sign out
-                        Get.dialog(Center(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
-                                color: Colors.grey[700],
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 15),
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text("I Sign Out duh tak tak em?"),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Get.back();
-                                        },
-                                        child: Text(
-                                          "Aih",
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          var _guest = Member(
-                                            userId: '',
-                                            name: 'Guest',
-                                            email: '',
-                                            phone: '',
-                                            role: 'user',
-                                            avatarUrl: "",
-                                            createdAt: DateTime.now(),
-                                          );
-                                          setState(() {
-                                            _userCtrl.user.value = _guest;
-                                          });
-                                          Get.back();
-                                        },
-                                        child: Text(
-                                          "Aw",
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ));
-                      } else {
-                        Get.to(SignIn());
-                      }
+                      autButtonClick(signedIn);
                     },
                     child: Text(
                       signedIn ? "Log Out" : "Sign In",
@@ -408,5 +349,78 @@ class _HomeSettingsState extends State<HomeSettings> {
         ],
       ),
     );
+  }
+
+  void autButtonClick(bool signedIn) {
+    if (signedIn) {
+      //sign out
+      Get.dialog(
+        Center(
+          child: CommonDialog(
+            title: "Attention",
+            body: SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Sign out I duh tak tak em?'),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Constants.primary),
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(
+                          "Aih",
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Constants.primary),
+                        onPressed: () async {
+                          var _guest = Member(
+                            userId: '',
+                            name: 'Guest',
+                            email: '',
+                            phone: '',
+                            role: 'user',
+                            avatarUrl: "",
+                            createdAt: DateTime.now(),
+                          );
+                          await FirebaseAuth.instance.signOut();
+                          setState(() {
+                            _userCtrl.user.value = _guest;
+                          });
+                          Get.back();
+                        },
+                        child: Text(
+                          "Aw",
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      Get.to(() => SignIn());
+    }
   }
 }

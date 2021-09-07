@@ -101,10 +101,11 @@ class _HomeNoticesState extends State<HomeNotices> {
             _temp.add(temp);
           });
           if (docs.isNotEmpty) {
-            setState(() {
-              lastDoc = docs.last;
-              noticeList.addAll(_temp);
-            });
+            if (mounted)
+              setState(() {
+                lastDoc = docs.last;
+                noticeList.addAll(_temp);
+              });
           }
           _refreshController.loadComplete();
         });
@@ -122,9 +123,7 @@ class _HomeNoticesState extends State<HomeNotices> {
           title: Text(
             noticeList[index].title,
             style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-            ),
+                fontWeight: FontWeight.w500, fontSize: 16, height: 2),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -140,9 +139,7 @@ class _HomeNoticesState extends State<HomeNotices> {
                     noticeList[index].excerpt +
                     noticeList[index].excerpt +
                     noticeList[index].excerpt,
-                style: GoogleFonts.roboto(
-                  fontSize: 14,
-                ),
+                style: GoogleFonts.roboto(fontSize: 14, height: 1.5),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

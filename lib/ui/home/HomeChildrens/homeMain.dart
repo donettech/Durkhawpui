@@ -3,6 +3,7 @@ import 'package:durkhawpui/model/notice.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'subPages/NoticeDetail.dart';
 import 'widgets/dinhmun.dart';
 import 'widgets/todayData.dart';
@@ -67,8 +68,20 @@ class _HomeMainState extends State<HomeMain> {
                 itemBuilder: (context, index) {
                   return Card(
                     child: ListTile(
-                      title: Text(_noticeList[index].title),
-                      subtitle: Text(_noticeList[index].excerpt),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                      title: Text(
+                        _noticeList[index].title,
+                        style: GoogleFonts.poppins(fontSize: 16, height: 2),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        _noticeList[index].excerpt,
+                        style: GoogleFonts.poppins(fontSize: 13, height: 1.9),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       onTap: () {
                         Get.to(() => NoticeDetails(notice: _noticeList[index]));
                       },

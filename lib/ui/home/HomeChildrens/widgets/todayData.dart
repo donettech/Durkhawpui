@@ -84,7 +84,7 @@ class _TodayDataState extends State<TodayData> {
           child: (userCtrl.user.value.role == "admin")
               ? IconButton(
                   onPressed: () async {
-                    var res = await Get.to(() => CalendarEdit());
+                    await Get.to(() => CalendarEdit());
                     setState(() {});
                   },
                   icon: Icon(Icons.mode_edit_rounded),

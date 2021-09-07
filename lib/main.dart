@@ -6,9 +6,9 @@ import 'controllers/UserController.dart';
 import 'ui/initial/root.dart';
 
 void main() async {
-  Get.lazyPut(() => UserController());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Get.put(UserController(), permanent: true);
   runApp(MyApp());
 }
 

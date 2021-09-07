@@ -5,10 +5,12 @@ class NotiController extends GetxController {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   Future<void> toggleSub({required bool turnOn}) async {
-    if (turnOn)
+    if (turnOn) {
       await messaging.subscribeToTopic('all');
-    else
+      print("JKJKKK Subscribed");
+    } else
       await messaging.unsubscribeFromTopic('all');
+    print("JKJKKK  UnSubscribed");
   }
 
   void handleNoti() async {

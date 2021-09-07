@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoticeDetails extends StatefulWidget {
   final Notice notice;
@@ -65,8 +66,12 @@ class _NoticeDetailsState extends State<NoticeDetails>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            widget.notice.title,
+          title: Hero(
+            tag: "noticeTxt",
+            transitionOnUserGestures: true,
+            child: Text(
+              widget.notice.title,
+            ),
           ),
           centerTitle: true,
         ),
@@ -106,7 +111,32 @@ class _NoticeDetailsState extends State<NoticeDetails>
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              MarkdownBody(data: widget.notice.desc),
+                              MarkdownBody(
+                                data: widget.notice.desc,
+                                selectable: true,
+                                onTapLink: (tappedLink, aa, sdf) async {
+                                  print("Link tapped1 " + tappedLink);
+                                  try {
+                                    await canLaunch(tappedLink)
+                                        ? await launch(tappedLink)
+                                        : throw 'Could not launch ';
+                                    // launch(tappedLink);
+                                  } catch (e) {
+                                    print(e.toString());
+                                  }
+                                },
+                                styleSheet: MarkdownStyleSheet.fromTheme(
+                                  ThemeData(
+                                    textTheme: TextTheme(
+                                      bodyText2: TextStyle(
+                                        fontSize: 18.0,
+                                        color: Colors.white,
+                                        height: 1.3,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                               SizedBox(
                                 height: 10,
                               ),
@@ -399,7 +429,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
   }
 
   String _formatDate(DateTime date) {
-    var _new = DateFormat("h:mm a dd-MMMM-yy").format(date);
+    var _new = DateFormat("h:mm a dd-MMM-yy").format(date);
     return _new;
   }
 }

@@ -6,6 +6,7 @@ import 'package:durkhawpui/ui/home/HomeChildrens/widgets/addQuarantine.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/widgets/singleQuarantine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -117,10 +118,20 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
         child: ListTile(
           title: Text(
             quarantines[index].name,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              height: 2,
+            ),
           ),
           subtitle: Row(
             children: [
-              Text(_formatDate(quarantines[index].quarantineFrom)),
+              Text(
+                _formatDate(quarantines[index].quarantineFrom),
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  height: 1.5,
+                ),
+              ),
             ],
           ),
           trailing: IconButton(

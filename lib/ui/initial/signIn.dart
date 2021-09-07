@@ -1,3 +1,4 @@
+import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';
 import 'package:durkhawpui/ui/initial/root.dart';
 import 'package:durkhawpui/utils/constants.dart';
@@ -44,7 +45,8 @@ class _SignInState extends State<SignIn> {
         loading = false;
       });
       Get.find<SecureController>().skip();
-      Get.offAll(Root());
+      await Get.put(SecureController()).switchNoti(newValue: true);
+      Get.offAll(() => Root());
     } on FirebaseAuthException catch (e) {
       setState(() {
         loading = false;
@@ -180,8 +182,10 @@ class _SignInState extends State<SignIn> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Get.find<SecureController>().skip().then((value) {
-                        Get.offAll(Root());
+                      Get.find<SecureController>().skip().then((value) async {
+                        await Get.put(SecureController())
+                            .switchNoti(newValue: true);
+                        Get.offAll(() => Root());
                       });
                     },
                     child: Text(

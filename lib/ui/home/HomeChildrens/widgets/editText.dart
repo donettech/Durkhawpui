@@ -11,6 +11,8 @@ class EditTextDialog extends StatelessWidget {
       required this.onConfirm})
       : super(key: key);
 
+  final _form = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -23,26 +25,50 @@ class EditTextDialog extends StatelessWidget {
           ),
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           margin: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 15,
-              ),
-              TextField(
-                controller: controller,
-                autofocus: true,
-                keyboardType:
-                    enterNumber ? TextInputType.phone : TextInputType.text,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              TextButton(
-                onPressed: onConfirm,
-                child: Text("Confirm"),
-              ),
-            ],
+          child: Form(
+            key: _form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 15,
+                ),
+                TextFormField(
+                  controller: controller,
+                  autofocus: true,
+                  keyboardType:
+                      enterNumber ? TextInputType.phone : TextInputType.text,
+                  validator: (value) {
+                    if (enterNumber) {
+                      if (value != null &&
+                          value.isNotEmpty &&
+                          value.length == 10) {
+                        return null;
+                      }
+                      return "Number digit 10 chhut luh angai";
+                    } else {
+                      if (value != null &&
+                          value.isNotEmpty &&
+                          value.length > 2) {
+                        return null;
+                      }
+                      return "Hming hawrawp 2 aia tlem lo chhut angai";
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (_form.currentState!.validate()) {
+                      onConfirm!();
+                    }
+                  },
+                  child: Text("Confirm"),
+                ),
+              ],
+            ),
           ),
         ),
       ),

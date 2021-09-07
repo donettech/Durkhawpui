@@ -15,7 +15,7 @@ class UserController extends GetxController {
     createdAt: DateTime.now(),
   ).obs;
 
-  void getUserData({required User signedInUser}) async {
+  Future<void> getUserData({required User signedInUser}) async {
     var data = await _fire.doc(signedInUser.uid).get();
     if (!data.exists) {
       Member tempUser = Member(

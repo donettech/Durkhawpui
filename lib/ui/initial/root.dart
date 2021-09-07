@@ -39,7 +39,7 @@ class _RootState extends State<Root> {
     } else {
       User? user = auth.currentUser;
       if (user != null) {
-        Get.find<UserController>().getUserData(signedInUser: user);
+        await Get.find<UserController>().getUserData(signedInUser: user);
       }
       Get.offAll(() => HomeRoot());
       return true;

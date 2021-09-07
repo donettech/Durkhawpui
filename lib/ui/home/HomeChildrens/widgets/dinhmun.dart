@@ -58,7 +58,7 @@ class _DinhmunCardState extends State<DinhmunCard> {
               height: 5,
             ),
             Text(
-              'Durkhawpui Covid-19 Dinhmun',
+              'Covid-19 Dinhmun',
               style: GoogleFonts.ebGaramond(fontSize: 20),
             ),
             SizedBox(height: 2),
