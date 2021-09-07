@@ -15,7 +15,7 @@ class CommonDialog extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: Colors.white,
+          color: Constants.secondary,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
