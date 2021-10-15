@@ -29,9 +29,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+  get: ^4.1.4 
+  pull_to_refresh: ^2.0.0
+
   bottom_navy_bar: ^6.0.0
   getwidget: ^2.0.2
   fab_circular_menu: ^1.0.2
+  # flutter_reaction_button: ^1.0.8
+  like_button: ^2.0.3
+  material_design_icons_flutter: ^5.0.5955-rc.1
   
 
   firebase_core: ^1.0.4
@@ -43,9 +49,6 @@ dependencies:
   google_maps_flutter: ^2.0.6
 
   permission_handler: ^7.0.0
-
-  get: ^4.1.4 
-  pull_to_refresh: ^2.0.0
 
   google_fonts: ^2.0.0
   cached_network_image: ^3.0.0
@@ -61,8 +64,7 @@ dependencies:
   share: ^2.0.1
 
   flutter_secure_storage: ^4.2.0
-
-  flutter_cached_pdfview: ^0.4.0-nullsafety
+  flutter_cached_pdfview: ^0.4.0-nullsafety 
 
   # gpay plugin
   # pay: ^1.0.5
@@ -96,6 +98,7 @@ flutter:
     - assets/hello.png
     - assets/dp.png
     - assets/clap.png
+    - assets/images/
     # //TODO gpay integrate
     # - assets/default_payment_profile_google_pay.json
   #   - images/a_dot_ham.jpeg

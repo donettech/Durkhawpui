@@ -41,11 +41,12 @@ android {
 
     defaultConfig {
         applicationId "com.durtlang.app"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        ndkVersion = "23.0.7599858"
     }
 
     signingConfigs {

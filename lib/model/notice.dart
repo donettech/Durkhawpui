@@ -10,7 +10,8 @@ class Notice {
   late String ngo;
   late String desc;
   late String excerpt;
-  late int claps;
+  late int likes;
+  late int commentCount;
   late int viewCount;
   late String? attachmentLink;
   late int attachmentType;
@@ -32,7 +33,8 @@ class Notice {
     required this.ngo,
     required this.desc,
     required this.excerpt,
-    required this.claps,
+    required this.likes,
+    required this.commentCount,
     required this.viewCount,
     required this.attachmentType,
     required this.useMap,
@@ -50,7 +52,8 @@ class Notice {
           ngo: json['ngo']! as String,
           desc: json['desc']! as String,
           excerpt: json['excerpt']! as String,
-          claps: json['claps'] as int,
+          likes: json['likes'] as int,
+          commentCount: json['commentCount'] as int,
           viewCount: json['viewCount'] as int,
           attachmentType: json['attachmentType'] as int,
           useMap: json['useMap'],
@@ -67,7 +70,8 @@ class Notice {
       "ngo": ngo,
       "desc": desc,
       "excerpt": excerpt,
-      "claps": claps,
+      "likes": likes,
+      "commentCount": commentCount,
       "viewCount": viewCount,
       "attachmentType": attachmentType,
       'attachmentLink': attachmentLink,

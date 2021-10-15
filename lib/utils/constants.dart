@@ -6,4 +6,5 @@ class Constants {
   static const Color secondary = Color(0xFF1f2839);
   static const Color tabBarSelectedColor = Colors.lightBlueAccent;
   static const Color fabColor = Color(0xFF65fae4);
+  static const Color likeColor = Color(0xFF65fae4);
 }
