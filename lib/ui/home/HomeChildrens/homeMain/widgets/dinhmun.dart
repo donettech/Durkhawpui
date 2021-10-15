@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/creator.dart';
 import 'package:durkhawpui/model/stats.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/widgets/editDinhmun.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/homeMain/widgets/editDinhmun.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,25 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
-import 'package:durkhawpui/model/quarantine.dart';
+import 'package:durkhawpui/model/notice.dart';
 import 'package:durkhawpui/model/user.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/widgets/addQuarantine.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/widgets/singleQuarantine.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/homeNotices/widgets/addNotice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class HomeQuarantines extends StatefulWidget {
-  const HomeQuarantines({Key? key}) : super(key: key);
+import '../subPages/NoticeDetail.dart';
+
+class HomeNotices extends StatefulWidget {
+  const HomeNotices({Key? key}) : super(key: key);
 
   @override
-  _HomeQuarantinesState createState() => _HomeQuarantinesState();
+  _HomeNoticesState createState() => _HomeNoticesState();
 }
 
-class _HomeQuarantinesState extends State<HomeQuarantines> {
+class _HomeNoticesState extends State<HomeNotices> {
   final userCtrl = Get.find<UserController>();
-  List<Quarantine> quarantines = [];
+  List<Notice> noticeList = [];
   RefreshController _refreshController = RefreshController();
   final _fire = FirebaseFirestore.instance;
 
@@ -35,23 +36,25 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
 
   void onRefresh() async {
     var result = _fire
-        .collection('quarantines')
+        .collection('posts')
         .limit(fetchLimit)
         .orderBy('createdAt', descending: true)
         .snapshots();
     result.listen((event) {
-      quarantines.clear();
+      setState(() {
+        noticeList.clear();
+      });
       List<QueryDocumentSnapshot> docs = event.docs;
-      List<Quarantine> _temp = [];
+      List<Notice> _temp = [];
       docs.forEach((QueryDocumentSnapshot element) {
-        Quarantine temp = Quarantine.fromJson(element.data(), element.id);
+        Notice temp = Notice.fromJson(element.data(), element.id);
         _temp.add(temp);
       });
       if (docs.isNotEmpty) {
         lastDoc = docs.last;
       }
       setState(() {
-        quarantines.addAll(_temp);
+        noticeList.addAll(_temp);
       });
       _refreshController.refreshCompleted();
     });
@@ -61,21 +64,21 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
     if (lastDoc != null) {
       try {
         QuerySnapshot result = await _fire
-            .collection('quarantines')
+            .collection('posts')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
             .startAfterDocument(lastDoc!)
             .get();
         List<QueryDocumentSnapshot> docs = result.docs;
-        List<Quarantine> _temp = [];
+        List<Notice> _temp = [];
         docs.forEach((QueryDocumentSnapshot element) {
-          Quarantine temp = Quarantine.fromJson(element.data(), element.id);
+          Notice temp = Notice.fromJson(element.data(), element.id);
           _temp.add(temp);
         });
         if (docs.isNotEmpty) {
           setState(() {
             lastDoc = docs.last;
-            quarantines.addAll(_temp);
+            noticeList.addAll(_temp);
           });
         }
         _refreshController.loadComplete();
@@ -85,23 +88,24 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
     } else {
       try {
         var result = _fire
-            .collection('quarantines')
+            .collection('posts')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
             .snapshots();
         result.listen((event) {
-          quarantines.clear();
+          noticeList.clear();
           List<QueryDocumentSnapshot> docs = event.docs;
-          List<Quarantine> _temp = [];
+          List<Notice> _temp = [];
           docs.forEach((QueryDocumentSnapshot element) {
-            Quarantine temp = Quarantine.fromJson(element.data(), element.id);
+            Notice temp = Notice.fromJson(element.data(), element.id);
             _temp.add(temp);
           });
           if (docs.isNotEmpty) {
-            setState(() {
-              lastDoc = docs.last;
-              quarantines.addAll(_temp);
-            });
+            if (mounted)
+              setState(() {
+                lastDoc = docs.last;
+                noticeList.addAll(_temp);
+              });
           }
           _refreshController.loadComplete();
         });
@@ -113,47 +117,48 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
 
   Widget _body() {
     return ListView.builder(
-      itemCount: quarantines.length,
+      itemCount: noticeList.length,
       itemBuilder: (context, index) => Card(
         child: ListTile(
           title: Text(
-            quarantines[index].name,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              height: 2,
-            ),
+            noticeList[index].title,
+            style: GoogleFonts.roboto(
+                fontWeight: FontWeight.w500, fontSize: 16, height: 2),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          subtitle: Row(
+          subtitle: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: 5,
+              ),
               Text(
-                _formatDate(quarantines[index].quarantineFrom),
-                style: GoogleFonts.poppins(
+                noticeList[index].excerpt +
+                    noticeList[index].excerpt +
+                    noticeList[index].excerpt +
+                    noticeList[index].excerpt,
+                style: GoogleFonts.roboto(fontSize: 14, height: 1.5),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(
+                height: 7,
+              ),
+              Text(
+                _formatDate(noticeList[index].createdAt),
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w400,
                   fontSize: 12,
-                  height: 1.5,
                 ),
               ),
             ],
           ),
-          trailing: IconButton(
-            onPressed: () {
-              Get.dialog(QuarantineDetailDialog(
-                model: quarantines[index],
-              ));
-              // Get.to(() => QuarantineDetailDialog(
-              //       model: quarantines[index],
-              //     ));
-            },
-            icon: Icon(
-              Icons.arrow_forward_ios_rounded,
-            ),
-          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+          isThreeLine: true,
           onTap: () {
-            Get.dialog(QuarantineDetailDialog(
-              model: quarantines[index],
-            ));
-            // Get.to(() => QuarantineDetailDialog(
-            //       model: quarantines[index],
-            //     ));
+            Get.to(() => NoticeDetails(notice: noticeList[index]));
           },
         ),
       ),
@@ -166,16 +171,17 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Quarantine te'),
+          title: Text('Thuchhuah te'),
           centerTitle: true,
         ),
-        floatingActionButton: //change role
+        floatingActionButton:
+            //TODO change role
             (user.role == "admin")
                 ? FloatingActionButton(
                     child: Icon(Icons.add),
                     onPressed: () {
-                      // Get.dialog(widget);
-                      Get.to(AddQuarantineDialog());
+                      Get.to(() => AddNewNotice());
+                      // Get.to(() => Test());
                     },
                   )
                 : Container(),
@@ -193,7 +199,7 @@ class _HomeQuarantinesState extends State<HomeQuarantines> {
   }
 
   String _formatDate(DateTime date) {
-    var _new = DateFormat("dd-MMMM-yy").format(date);
+    var _new = DateFormat("h:mm a dd-MMMM-yy").format(date);
     return _new;
   }
 }

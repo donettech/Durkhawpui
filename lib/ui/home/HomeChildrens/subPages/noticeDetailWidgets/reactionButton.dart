@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/notice.dart';
 import 'package:durkhawpui/utils/constants.dart';
+import 'package:durkhawpui/utils/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -20,7 +20,8 @@ class _ReactionButtonsState extends State<ReactionButtons> {
   final _userCtrl = Get.find<UserController>();
   final double buttonSize = 20;
   final _fire = FirebaseFirestore.instance;
-  late DocumentReference _ref;
+  late DocumentReference _likeRef;
+  late DocumentReference _postRef;
   int likeCount = 0;
   bool liked = false;
   int commentCount = 0;
@@ -30,12 +31,9 @@ class _ReactionButtonsState extends State<ReactionButtons> {
     super.initState();
     likeCount = widget.staticNotice.likes;
     commentCount = widget.staticNotice.commentCount;
-    _ref = _fire
-        .collection('posts')
-        .doc(widget.staticNotice.docId)
-        .collection('likes')
-        .doc(_userCtrl.user.value.userId);
-    _ref.get().then((DocumentSnapshot event) {
+    _postRef = _fire.collection('posts').doc(widget.staticNotice.docId);
+    _likeRef = _postRef.collection('likes').doc(_userCtrl.user.value.userId);
+    _likeRef.get().then((DocumentSnapshot event) {
       if (event.exists) {
         if (mounted)
           setState(() {
@@ -52,12 +50,22 @@ class _ReactionButtonsState extends State<ReactionButtons> {
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
     if (isLiked) {
-      _ref.delete();
+      _likeRef.delete();
+      changeLikeCount(
+        increment: false,
+        postId: widget.staticNotice.docId,
+        reference: _postRef,
+      );
       return false;
     } else {
-      _ref.set({
+      _likeRef.set({
         'createdAt': DateTime.now(),
       });
+      changeLikeCount(
+        increment: true,
+        postId: widget.staticNotice.docId,
+        reference: _postRef,
+      );
       return true;
     }
   }
@@ -89,6 +97,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                   size: buttonSize,
                 );
               },
+              isLiked: liked,
               likeCount: likeCount,
               onTap: onLikeButtonTapped,
             ),

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/model/ngo.dart';
 import 'package:durkhawpui/ui/commonWidgets/dialogCommon.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/widgets/addNGO.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/subPages/NGOList/addNGO.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

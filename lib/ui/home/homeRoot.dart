@@ -1,8 +1,8 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/homeMain.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/homeNotices.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/homeQuarantines.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/homeSettings.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/homeMain/homeMain.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/homeNotices/homeNotices.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/homeQuarantines/homeQuarantines.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/homeSettings/homeSettings.dart';
 import 'package:durkhawpui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -18,17 +18,6 @@ class NoticeDetails extends StatefulWidget {
 
 class _NoticeDetailsState extends State<NoticeDetails>
     with SingleTickerProviderStateMixin {
-  final _fire = FirebaseFirestore.instance.collection('posts');
-
-  void incrementClap() async {
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentReference postRef = _fire.doc(widget.notice.docId);
-      DocumentSnapshot snapshot = await transaction.get(postRef);
-      int clapCount = snapshot.data()!['claps'];
-      transaction.update(postRef, {"claps": clapCount + 1});
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
