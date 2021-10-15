@@ -1,11 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/model/notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'noticeDetailWidgets/attachment.dart';
+import 'noticeDetailWidgets/commentCount.dart';
 import 'noticeDetailWidgets/reactionButton.dart';
 
 class NoticeDetails extends StatefulWidget {
@@ -77,6 +78,9 @@ class _NoticeDetailsState extends State<NoticeDetails>
                 ),
                 SizedBox(
                   height: 5,
+                ),
+                CommentCountText(
+                  postId: widget.notice.docId,
                 ),
                 Divider(),
                 ReactionButtons(staticNotice: widget.notice),

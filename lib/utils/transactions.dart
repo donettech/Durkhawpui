@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> changeLikeCount(
-    {required String postId,
-    required bool increment,
-    required reference}) async {
+    {required bool increment, required reference}) async {
   try {
     FirebaseFirestore.instance.runTransaction<int>((transaction) async {
       DocumentSnapshot notice = await transaction.get(reference);
@@ -21,20 +19,15 @@ Future<void> changeLikeCount(
   }
 }
 
-Future<void> changeCommentCount(
-    {required String postId,
-    required bool increment,
-    required reference}) async {
+Future<void> changeCommentCount({required reference}) async {
   try {
     FirebaseFirestore.instance.runTransaction<int>((transaction) async {
       DocumentSnapshot notice = await transaction.get(reference);
       if (!notice.exists) {
         throw Exception('Document does not exist!');
       }
-      int updatedLikes = increment
-          ? notice.data()!['viewCount'] + 1
-          : notice.data()!['viewCount'] - 1;
-      transaction.update(reference, {'viewCount': updatedLikes});
+      int updatedLikes = notice.data()!['commentCount'] + 1;
+      transaction.update(reference, {'commentCount': updatedLikes});
       return updatedLikes;
     });
   } catch (e, s) {

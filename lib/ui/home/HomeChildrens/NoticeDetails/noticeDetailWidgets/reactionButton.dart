@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import 'commentsDialog.dart';
+
 class ReactionButtons extends StatefulWidget {
   final Notice staticNotice;
   ReactionButtons({Key? key, required this.staticNotice}) : super(key: key);
@@ -53,7 +55,6 @@ class _ReactionButtonsState extends State<ReactionButtons> {
       _likeRef.delete();
       changeLikeCount(
         increment: false,
-        postId: widget.staticNotice.docId,
         reference: _postRef,
       );
       return false;
@@ -63,7 +64,6 @@ class _ReactionButtonsState extends State<ReactionButtons> {
       });
       changeLikeCount(
         increment: true,
-        postId: widget.staticNotice.docId,
         reference: _postRef,
       );
       return true;
@@ -104,7 +104,17 @@ class _ReactionButtonsState extends State<ReactionButtons> {
           ),
           Expanded(
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Get.bottomSheet(
+                  CommentsDialog(
+                    postId: widget.staticNotice.docId,
+                  ),
+                  isScrollControlled: true,
+                  enableDrag: true,
+                  ignoreSafeArea: false,
+                  backgroundColor: Colors.transparent,
+                );
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

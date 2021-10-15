@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/controllers/timeController.dart';
 import 'package:durkhawpui/model/calendar.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/subPages/calendarEdit.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/homeMain/widgets/calendarEdit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

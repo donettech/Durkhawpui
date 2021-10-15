@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../subPages/NoticeDetail.dart';
+import '../NoticeDetails/NoticeDetail.dart';
 
 class HomeNotices extends StatefulWidget {
   const HomeNotices({Key? key}) : super(key: key);
