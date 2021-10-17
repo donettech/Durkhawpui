@@ -15,6 +15,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:markdown_editable_textinput/markdown_text_input.dart';
 
+import 'addMarkerName.dart';
 import 'selectMapGeo.dart';
 
 class AddNewNotice extends StatefulWidget {
@@ -30,6 +31,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   final _fire = FirebaseFirestore.instance;
   List<String> ngoList = [];
   String? selectedNgo;
+  String? _markerName;
 
   String description = "";
 
@@ -117,6 +119,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         viewCount: 0,
         title: _title.text,
         desc: description,
+        markerName: _markerName,
         excerpt: excerpt,
         attachmentType: attachType,
         attachmentLink: null,
@@ -163,6 +166,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               viewCount: 0,
               ngo: selectedNgo!,
               title: _title.text,
+              markerName: _markerName,
               desc: description,
               excerpt: excerpt,
               attachmentType: attachType,
@@ -255,13 +259,24 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                           ),
                         );
                         if (result != null) {
-                          setState(() {
-                            useMap = newValue;
-                            geoPoint = result;
-                          });
+                          var markerName = await Get.dialog(AddMarkerName());
+                          if (markerName != null) {
+                            setState(() {
+                              _markerName = markerName;
+                              useMap = newValue;
+                              geoPoint = result;
+                            });
+                          } else {
+                            setState(() {
+                              _markerName = null;
+                              useMap = false;
+                              geoPoint = null;
+                            });
+                          }
                         }
                       } else {
                         setState(() {
+                          _markerName = null;
                           useMap = false;
                           geoPoint = null;
                         });
@@ -488,11 +503,13 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         fillColor: Colors.white,
         border: new OutlineInputBorder(
           borderRadius: new BorderRadius.circular(8.0),
-          borderSide: new BorderSide(color: Theme.of(context).accentColor),
+          borderSide:
+              new BorderSide(color: Theme.of(context).colorScheme.secondary),
         ),
         enabledBorder: new OutlineInputBorder(
           borderRadius: new BorderRadius.circular(8.0),
-          borderSide: new BorderSide(color: Theme.of(context).accentColor),
+          borderSide:
+              new BorderSide(color: Theme.of(context).colorScheme.secondary),
         ),
         //fillColor: Colors.green
       ),
