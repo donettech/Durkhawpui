@@ -35,7 +35,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Column(
@@ -50,7 +50,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
                   ),
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 8,
                 ),
                 _buildMd(),
                 SizedBox(
@@ -59,14 +59,14 @@ class _NoticeDetailsState extends State<NoticeDetails>
                 Text(
                   widget.notice.ngo.toUpperCase(),
                   style: GoogleFonts.roboto(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
                 Text(
                   _formatDate(widget.notice.createdAt),
                   style: GoogleFonts.roboto(
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -84,9 +84,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
                 ),
                 Divider(),
                 ReactionButtons(staticNotice: widget.notice),
-                SizedBox(
-                  height: 5,
-                ),
+                Divider(),
               ],
             ),
           ),
@@ -111,7 +109,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
         ThemeData(
           textTheme: TextTheme(
             bodyText2: TextStyle(
-              fontSize: 18.0,
+              fontSize: 16.0,
               color: Colors.white,
               height: 1.3,
             ),
