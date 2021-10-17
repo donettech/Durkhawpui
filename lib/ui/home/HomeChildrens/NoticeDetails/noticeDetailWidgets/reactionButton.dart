@@ -5,8 +5,10 @@ import 'package:durkhawpui/utils/constants.dart';
 import 'package:durkhawpui/utils/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:share/share.dart';
 
 import 'commentsDialog.dart';
 
@@ -20,7 +22,7 @@ class ReactionButtons extends StatefulWidget {
 
 class _ReactionButtonsState extends State<ReactionButtons> {
   final _userCtrl = Get.find<UserController>();
-  final double buttonSize = 20;
+  final double buttonSize = 18;
   final _fire = FirebaseFirestore.instance;
   late DocumentReference _likeRef;
   late DocumentReference _postRef;
@@ -73,7 +75,6 @@ class _ReactionButtonsState extends State<ReactionButtons> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         children: [
           Expanded(
@@ -103,8 +104,8 @@ class _ReactionButtonsState extends State<ReactionButtons> {
             ),
           ),
           Expanded(
-            child: InkWell(
-              onTap: () {
+            child: MaterialButton(
+              onPressed: () {
                 Get.bottomSheet(
                   CommentsDialog(
                     postId: widget.staticNotice.docId,
@@ -124,28 +125,47 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                     color: Colors.white,
                   ),
                   SizedBox(
-                    width: 5,
+                    width: 4,
                   ),
-                  Text("Comments"),
+                  Text(
+                    "Comments",
+                    style: GoogleFonts.roboto(
+                      fontSize: 13,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           Expanded(
-            child: InkWell(
-              onTap: () {},
+            child: MaterialButton(
+              onPressed: () {
+                final RenderBox box = context.findRenderObject() as RenderBox;
+                //TODO put default link is no dynamic link available
+                Share.share(
+                    widget.staticNotice.dynamicLink ??
+                        "https://youtu.be/qrMwxe2ya5E",
+                    subject: widget.staticNotice.title,
+                    sharePositionOrigin:
+                        box.localToGlobal(Offset.zero) & box.size);
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     MdiIcons.shareOutline,
-                    size: buttonSize,
+                    size: buttonSize + 5,
                     color: Colors.white,
                   ),
                   SizedBox(
                     width: 5,
                   ),
-                  Text("Share"),
+                  Text(
+                    "Share",
+                    style: GoogleFonts.roboto(
+                      fontSize: 13,
+                    ),
+                  ),
                 ],
               ),
             ),
