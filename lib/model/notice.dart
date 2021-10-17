@@ -16,6 +16,7 @@ class Notice {
   late String? attachmentLink;
   late int attachmentType;
   late bool useMap;
+  String? markerName;
   String? dynamicLink;
   late GeoPoint? geoPoint;
   /* 
@@ -32,6 +33,7 @@ class Notice {
     required this.title,
     required this.ngo,
     required this.desc,
+    required this.markerName,
     required this.excerpt,
     required this.likes,
     required this.commentCount,
@@ -49,6 +51,7 @@ class Notice {
           createdBy: Creator.fromJson(json['createdBy']),
           docId: documentId,
           title: json['title']! as String,
+          markerName: json['markerName'],
           ngo: json['ngo']! as String,
           desc: json['desc']! as String,
           excerpt: json['excerpt']! as String,
@@ -69,6 +72,7 @@ class Notice {
       "title": title,
       "ngo": ngo,
       "desc": desc,
+      "markerName": markerName,
       "excerpt": excerpt,
       "likes": likes,
       "commentCount": commentCount,
