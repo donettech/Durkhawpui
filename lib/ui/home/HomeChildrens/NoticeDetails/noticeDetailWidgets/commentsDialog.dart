@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/comment.dart';
+import 'package:durkhawpui/utils/dateTimeFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -26,7 +27,7 @@ class _CommentsDialogState extends State<CommentsDialog> {
 
   QueryDocumentSnapshot? lastDoc;
 
-  int fetchLimit = 10;
+  int fetchLimit = 8;
 
   @override
   void initState() {
@@ -122,6 +123,7 @@ class _CommentsDialogState extends State<CommentsDialog> {
     return ListView.builder(
       itemCount: commentList.length,
       itemBuilder: (context, index) => Card(
+        color: Colors.black12.withOpacity(0.0001),
         child: ListTile(
           leading: Container(
             width: 50,
@@ -154,16 +156,17 @@ class _CommentsDialogState extends State<CommentsDialog> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              Row(
-                children: [
-                  Text(
-                    commentList[index].createdAt.toString(),
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                timeAgo(commentList[index].createdAt),
+                style: GoogleFonts.roboto(
+                  fontSize: 11,
+                ),
+              ),
+              SizedBox(
+                height: 10,
               )
             ],
           ),
