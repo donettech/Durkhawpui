@@ -17,6 +17,7 @@ class MarkerMap extends StatefulWidget {
 class _MarkerMapState extends State<MarkerMap> {
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   MarkerId? selectedMarker;
+  GoogleMapController? mapController;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +41,7 @@ class _MarkerMapState extends State<MarkerMap> {
 
   void _onMapCreated(GoogleMapController controller) async {
     MarkerId markerId = MarkerId("UniqueId");
+    mapController = controller;
     LatLng position = LatLng(widget.point.latitude, widget.point.longitude);
     Marker marker = Marker(
         markerId: markerId,
@@ -75,6 +77,13 @@ class _MarkerMapState extends State<MarkerMap> {
         });
     setState(() {
       _markers[markerId] = marker;
+    });
+    Future.delayed(Duration(seconds: 1)).then((value) {
+      setState(() {
+        if (mapController != null && widget.address != null) {
+          mapController!.showMarkerInfoWindow(markerId);
+        }
+      });
     });
   }
 }
