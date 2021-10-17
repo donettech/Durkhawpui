@@ -1,4 +1,3 @@
-import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';
 import 'package:durkhawpui/ui/initial/root.dart';
 import 'package:durkhawpui/utils/constants.dart';
