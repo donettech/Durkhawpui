@@ -75,6 +75,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
                   useMap: widget.notice.useMap,
                   location: widget.notice.geoPoint,
                   attachmentLink: widget.notice.attachmentLink,
+                  markerName: widget.notice.markerName,
                 ),
                 SizedBox(
                   height: 5,

@@ -11,10 +11,12 @@ class NoticeAttachmentBuilder extends StatelessWidget {
   final String? attachmentLink;
   final bool useMap;
   final GeoPoint? location;
+  final String? markerName;
   NoticeAttachmentBuilder(
       {Key? key,
       required this.attachmentType,
       required this.useMap,
+      this.markerName,
       this.location,
       this.attachmentLink})
       : super(key: key);
@@ -45,6 +47,7 @@ class NoticeAttachmentBuilder extends StatelessWidget {
                   child: MarkerMap(
                     height: 250,
                     point: location!,
+                    address: markerName ?? "",
                   ),
                 ),
               ),
