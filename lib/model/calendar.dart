@@ -8,6 +8,7 @@ class CalendarModel {
   late DateTime startDate;
   late DateTime endDate;
   late Creator updatedBy;
+  late bool showData;
   late String mon;
   late String tue;
   late String wed;
@@ -29,6 +30,7 @@ class CalendarModel {
     required this.fri,
     required this.sat,
     required this.sun,
+    required this.showData,
   });
   CalendarModel.fromJson(Map<String, dynamic> json, String documentId)
       : this(
@@ -45,6 +47,7 @@ class CalendarModel {
           fri: json['fri'] as String,
           sat: json['sat'] as String,
           sun: json['sun'],
+          showData: json['showData'] as bool,
         );
   Map<String, Object?> toJson() {
     return {
@@ -60,6 +63,7 @@ class CalendarModel {
       "fri": fri,
       "sat": sat,
       'sun': sun,
+      "showData": showData,
     };
   }
 }

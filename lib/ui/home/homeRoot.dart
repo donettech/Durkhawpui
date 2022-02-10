@@ -1,7 +1,6 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeMain/homeMain.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeNotices/homeNotices.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/homeQuarantines/homeQuarantines.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeSettings/homeSettings.dart';
 import 'package:durkhawpui/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -37,12 +36,13 @@ class _HomeRootState extends State<HomeRoot> {
         child: PageView(
           controller: _pageController,
           onPageChanged: (index) {
-            setState(() => _currentIndex = index);
+            setState(() {
+              _currentIndex = index;
+            });
           },
           children: <Widget>[
             HomeMain(),
             HomeNotices(),
-            HomeQuarantines(),
             HomeSettings(),
           ],
         ),
@@ -51,10 +51,13 @@ class _HomeRootState extends State<HomeRoot> {
         selectedIndex: _currentIndex,
         backgroundColor: Constants.secondary,
         onItemSelected: (index) {
-          setState(() => _currentIndex = index);
-          _pageController.jumpToPage(index);
+          _pageController.animateToPage(index,
+              duration: Duration(milliseconds: 300), curve: Curves.ease);
+          setState(() {
+            _currentIndex = index;
+          });
         },
-        animationDuration: Duration(milliseconds: 800),
+        animationDuration: Duration(milliseconds: 600),
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
             title: Text(
@@ -86,24 +89,6 @@ class _HomeRootState extends State<HomeRoot> {
             icon: Icon(
               Icons.list,
               color: _currentIndex == 1
-                  ? Constants.tabBarSelectedColor
-                  : Colors.white,
-            ),
-            activeColor: Constants.primary,
-            inactiveColor: Colors.black87,
-          ),
-          BottomNavyBarItem(
-            title: Text(
-              'Quarantines',
-              style: GoogleFonts.roboto(
-                color: _currentIndex == 2
-                    ? Constants.tabBarSelectedColor
-                    : Colors.white,
-              ),
-            ),
-            icon: Icon(
-              Icons.people_alt_outlined,
-              color: _currentIndex == 2
                   ? Constants.tabBarSelectedColor
                   : Colors.white,
             ),

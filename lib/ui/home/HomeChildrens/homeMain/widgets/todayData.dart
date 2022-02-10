@@ -53,6 +53,11 @@ class _TodayDataState extends State<TodayData> {
                     if (snapshot.exists) {
                       CalendarModel _temp =
                           CalendarModel.fromJson(snapshot.data()!, snapshot.id);
+                      if (!_temp.showData) {
+                        return SizedBox(
+                          height: 5,
+                        );
+                      }
                       return Text(
                         _textForDay(_temp),
                         style: GoogleFonts.ebGaramond(

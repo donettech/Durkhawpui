@@ -77,6 +77,7 @@ class _CalendarEditState extends State<CalendarEdit> {
       fri: _fri.text,
       sat: _sat.text,
       sun: _sun.text,
+      showData: true,
     );
     _fire
         .collection('home')

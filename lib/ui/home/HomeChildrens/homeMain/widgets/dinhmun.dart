@@ -22,6 +22,7 @@ class _DinhmunCardState extends State<DinhmunCard> {
     active: 00,
     total: 00,
     deceased: 00,
+    showCard: false,
     updatedAt: DateTime.now(),
     updatedBy: Creator(id: 'id', name: 'name'),
     createdAt: DateTime.now(),
@@ -48,6 +49,9 @@ class _DinhmunCardState extends State<DinhmunCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (!stat.showCard) {
+      return SizedBox();
+    }
     return Card(
         child: Stack(
       children: [
@@ -59,7 +63,7 @@ class _DinhmunCardState extends State<DinhmunCard> {
             ),
             Text(
               'Covid-19 Dinhmun',
-              style: GoogleFonts.ebGaramond(fontSize: 20),
+              style: GoogleFonts.roboto(fontSize: 20),
             ),
             SizedBox(height: 2),
             Divider(thickness: 1),
