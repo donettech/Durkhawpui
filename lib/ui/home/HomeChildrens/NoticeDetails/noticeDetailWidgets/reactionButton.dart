@@ -74,7 +74,8 @@ class _ReactionButtonsState extends State<ReactionButtons> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
+      height: 30,
       child: Row(
         children: [
           Expanded(

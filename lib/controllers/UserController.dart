@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class UserController extends GetxController {
   final _fire = FirebaseFirestore.instance.collection('users');
   var user = Member(
-    userId: '',
+    userId: 'aa',
     name: 'Guest',
     email: '',
     phone: '',

@@ -11,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeSettings extends StatefulWidget {
@@ -35,12 +34,6 @@ class _HomeSettingsState extends State<HomeSettings> {
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<String> getBuildInfo() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var inf = packageInfo.version;
-    return inf;
   }
 
   @override
@@ -328,16 +321,6 @@ class _HomeSettingsState extends State<HomeSettings> {
                   ),
                   SizedBox(
                     height: 20,
-                  ),
-                  FutureBuilder(
-                    future: getBuildInfo(),
-                    builder: (context, snap) {
-                      if (snap.hasData) {
-                        var data = snap.data;
-                        return Text(data.toString());
-                      }
-                      return Text("");
-                    },
                   ),
                   SizedBox(
                     height: 20,

@@ -58,12 +58,13 @@ dependencies:
   flutter_markdown: ^0.6.2
   markdown_editable_textinput: ^2.0.0
 
-  package_info: ^2.0.2
+  package_info_plus: ^1.4.0
   intl: ^0.17.0
   url_launcher: ^6.0.3
   share: ^2.0.1
 
   flutter_secure_storage: ^4.2.0
+  shared_preferences: ^2.0.13
   flutter_cached_pdfview: ^0.4.0-nullsafety 
 
   # gpay plugin
@@ -99,6 +100,7 @@ flutter:
     - assets/dp.png
     - assets/clap.png
     - assets/images/
+    - assets/ic_launcher_round.png
     # //TODO gpay integrate
     # - assets/default_payment_profile_google_pay.json
   #   - images/a_dot_ham.jpeg

@@ -36,6 +36,11 @@ String hourCalculate(DateTime datetime) {
   return ((diff.inHours).toString());
 }
 
+String formatDate(DateTime date) {
+  var _new = DateFormat("h:mm a dd-MMMM-yy").format(date);
+  return _new;
+}
+
 String hourFormatter(DateTime datetime) {
   var hours = int.parse(hourCalculate(datetime));
 

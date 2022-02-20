@@ -24,11 +24,24 @@ class SecureController extends GetxController {
     return true;
   }
 
+  Future<bool> switchLanguage({required String newValue}) async {
+    await storage.write(key: 'language', value: newValue);
+    return true;
+  }
+
   Future<bool> checkNotiStatus() async {
     var str = await storage.read(key: 'notification');
     if (str != null && str == "true") {
       return true;
     } else
       return false;
+  }
+
+  Future<String> checkLanguageStatus() async {
+    var str = await storage.read(key: 'language');
+    if (str != null && str == "Mizo") {
+      return "Mizo";
+    } else
+      return 'English';
   }
 }

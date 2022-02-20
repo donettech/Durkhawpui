@@ -31,7 +31,7 @@ class _HomeNoticesState extends State<HomeNotices> {
   @override
   void initState() {
     super.initState();
-    onLoading();
+    onRefresh();
   }
 
   void onRefresh() async {
