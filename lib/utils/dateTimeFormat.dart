@@ -37,7 +37,7 @@ String hourCalculate(DateTime datetime) {
 }
 
 String formatDate(DateTime date) {
-  var _new = DateFormat("h:mm a dd-MMMM-yy").format(date);
+  var _new = DateFormat("dd-MMM yy h:mm a").format(date);
   return _new;
 }
 

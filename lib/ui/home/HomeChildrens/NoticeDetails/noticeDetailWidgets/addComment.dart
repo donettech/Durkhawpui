@@ -25,7 +25,7 @@ class AddCommentUI extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(8),
         ),
-        color: Colors.black87,
+        color: Theme.of(context).dialogBackgroundColor,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -50,6 +50,10 @@ class AddCommentUI extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
+                  if (_userCtrl.user.value.name.toLowerCase() == "guest") {
+                    _userCtrl.promptLogin();
+                    return;
+                  }
                   if (_textCtrl.text.isNotEmpty) {
                     Comment _temp = Comment(
                       docId: '',

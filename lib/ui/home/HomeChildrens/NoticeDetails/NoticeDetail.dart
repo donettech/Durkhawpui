@@ -1,6 +1,7 @@
 import 'package:durkhawpui/model/notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,12 +24,28 @@ class _NoticeDetailsState extends State<NoticeDetails>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Hero(
-            tag: "noticeTxt",
-            transitionOnUserGestures: true,
-            child: Text(
-              widget.notice.title,
+          leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).iconTheme.color,
             ),
+          ),
+          elevation: 0,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.notice.ngo + " ",
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Text(
+                "post_title".tr,
+                style: Theme.of(context).textTheme.subtitle1,
+              )
+            ],
           ),
           centerTitle: true,
         ),
@@ -80,8 +97,13 @@ class _NoticeDetailsState extends State<NoticeDetails>
                 SizedBox(
                   height: 5,
                 ),
-                CommentCountText(
-                  postId: widget.notice.docId,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CommentCountText(
+                      postId: widget.notice.docId,
+                    ),
+                  ],
                 ),
                 Divider(),
                 ReactionButtons(staticNotice: widget.notice),
@@ -111,7 +133,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
           textTheme: TextTheme(
             bodyText2: TextStyle(
               fontSize: 16.0,
-              color: Colors.white,
+              color: Theme.of(context).textTheme.caption!.color,
               height: 1.3,
             ),
           ),

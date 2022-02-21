@@ -53,6 +53,10 @@ class _ReactionButtonsState extends State<ReactionButtons> {
   }
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
+    if (_userCtrl.user.value.name.toLowerCase() == "guest") {
+      _userCtrl.promptLogin();
+      return false;
+    }
     if (isLiked) {
       _likeRef.delete();
       changeLikeCount(
@@ -79,34 +83,40 @@ class _ReactionButtonsState extends State<ReactionButtons> {
       child: Row(
         children: [
           Expanded(
-            child: LikeButton(
-              size: buttonSize,
-              circleColor: CircleColor(start: Colors.black, end: Colors.white),
-              bubblesColor: BubblesColor(
-                dotPrimaryColor: Constants.likeColor,
-                dotSecondaryColor: Constants.likeColor,
-              ),
-              likeBuilder: (bool isLiked) {
-                if (isLiked)
+            child: GestureDetector(
+              onTap: () {
+                onLikeButtonTapped(!liked);
+              },
+              child: LikeButton(
+                size: buttonSize,
+                circleColor:
+                    CircleColor(start: Colors.black, end: Colors.white),
+                bubblesColor: BubblesColor(
+                  dotPrimaryColor: Constants.likeColor,
+                  dotSecondaryColor: Constants.likeColor,
+                ),
+                likeBuilder: (bool isLiked) {
+                  if (isLiked)
+                    return Icon(
+                      MdiIcons.thumbUp,
+                      color: Theme.of(context).colorScheme.secondary,
+                      size: buttonSize,
+                    );
                   return Icon(
-                    MdiIcons.thumbUp,
-                    color: Constants.likeColor,
+                    MdiIcons.thumbUpOutline,
+                    color: Theme.of(context).colorScheme.secondary,
                     size: buttonSize,
                   );
-                return Icon(
-                  MdiIcons.thumbUpOutline,
-                  color: Colors.white,
-                  size: buttonSize,
-                );
-              },
-              isLiked: liked,
-              likeCount: likeCount,
-              onTap: onLikeButtonTapped,
+                },
+                isLiked: liked,
+                likeCount: likeCount,
+                onTap: onLikeButtonTapped,
+              ),
             ),
           ),
           Expanded(
-            child: MaterialButton(
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 Get.bottomSheet(
                   CommentsDialog(
                     postId: widget.staticNotice.docId,
@@ -117,30 +127,43 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                   backgroundColor: Colors.transparent,
                 );
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    MdiIcons.commentTextOutline,
-                    size: buttonSize,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    "Comments",
-                    style: GoogleFonts.roboto(
-                      fontSize: 13,
+              child: MaterialButton(
+                onPressed: () {
+                  Get.bottomSheet(
+                    CommentsDialog(
+                      postId: widget.staticNotice.docId,
                     ),
-                  ),
-                ],
+                    isScrollControlled: true,
+                    enableDrag: true,
+                    ignoreSafeArea: false,
+                    backgroundColor: Colors.transparent,
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      MdiIcons.commentTextOutline,
+                      size: buttonSize,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Text(
+                      "Comment",
+                      style: GoogleFonts.roboto(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
           Expanded(
-            child: MaterialButton(
-              onPressed: () {
+            child: GestureDetector(
+              onTap: () {
                 final RenderBox box = context.findRenderObject() as RenderBox;
                 //TODO put default link is no dynamic link available
                 Share.share(
@@ -150,24 +173,36 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                     sharePositionOrigin:
                         box.localToGlobal(Offset.zero) & box.size);
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    MdiIcons.shareOutline,
-                    size: buttonSize + 5,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    "Share",
-                    style: GoogleFonts.roboto(
-                      fontSize: 13,
+              child: MaterialButton(
+                onPressed: () {
+                  final RenderBox box = context.findRenderObject() as RenderBox;
+                  //TODO put default link is no dynamic link available
+                  Share.share(
+                      widget.staticNotice.dynamicLink ??
+                          "https://youtu.be/qrMwxe2ya5E",
+                      subject: widget.staticNotice.title,
+                      sharePositionOrigin:
+                          box.localToGlobal(Offset.zero) & box.size);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      MdiIcons.shareOutline,
+                      size: buttonSize + 5,
+                      color: Colors.white,
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Share",
+                      style: GoogleFonts.roboto(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

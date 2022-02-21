@@ -18,9 +18,15 @@ class CommentCountText extends StatelessWidget {
           Notice _notice = Notice.fromJson(snap.data()!, snap.id);
           if (_notice.commentCount < 1) return Container();
           return Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Spacer(),
-              Text(_notice.commentCount.toString() + " Comments"),
+              Text(
+                _notice.commentCount.toString() + " Comments",
+                style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                      fontSize: 12,
+                    ),
+              ),
             ],
           );
         }

@@ -1,4 +1,5 @@
 import 'package:durkhawpui/controllers/UserController.dart';
+import 'package:durkhawpui/ui/commonWidgets/dialogCommon.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/homeNotices/widgets/addNotice.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/notification_tile.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/them_tile.dart';
@@ -12,8 +13,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'widgets/language_tile.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
   final userCtrl = Get.find<UserController>();
 
   Future<String> getBuildInfo() async {
@@ -36,24 +43,88 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).cardColor,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Theme.of(context).iconTheme.color,
+          ),
+        ),
         elevation: 0,
+        actions: [
+          if (userCtrl.user.value.name.toLowerCase() == "guest")
+            IconButton(
+              onPressed: () {
+                Get.dialog(CommonDialog(
+                  title: "Sign In?",
+                  body: TextButton(
+                    child: Text(
+                      "Confirm",
+                      style: Theme.of(context).textTheme.button,
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: () {
+                      Get.back();
+                      userCtrl.handleSignIn().then((value) => setState(() {}));
+                    },
+                  ),
+                ));
+              },
+              icon: Icon(
+                Icons.login,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            ),
+          if (userCtrl.user.value.name.toLowerCase() != "guest")
+            IconButton(
+              onPressed: () {
+                Get.dialog(CommonDialog(
+                  title: "Sign Out?",
+                  body: TextButton(
+                    child: Text(
+                      "Confirm",
+                      style: Theme.of(context).textTheme.button,
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: () {
+                      Get.back();
+                      userCtrl.signOut().then((value) => setState(() {}));
+                    },
+                  ),
+                ));
+              },
+              icon: Icon(
+                Icons.login,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            ),
+          const SizedBox(
+            width: 15,
+          )
+        ],
       ),
       body: Container(
         color: Theme.of(context).cardColor,
         child: Column(
           children: [
-            _buildPhoto(),
-            Padding(padding: const EdgeInsets.only(top: 20)),
-            if (userCtrl.user.value.role == "admin")
-              SliverToBoxAdapter(
-                child: _buildAdminOptions(),
-              ),
-            Padding(padding: const EdgeInsets.only(top: 20)),
-            _buildAppSettings(),
-            Padding(padding: const EdgeInsets.only(top: 20)),
-            _buildLegals(),
-            Padding(padding: const EdgeInsets.only(top: 20)),
-            const Spacer(),
+            Expanded(
+                child: ListView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                _buildPhoto(),
+                Padding(padding: const EdgeInsets.only(top: 20)),
+                if (userCtrl.user.value.role == "admin") _buildAdminOptions(),
+                Padding(padding: const EdgeInsets.only(top: 20)),
+                _buildAppSettings(),
+                Padding(padding: const EdgeInsets.only(top: 20)),
+                _buildLegals(),
+                Padding(padding: const EdgeInsets.only(top: 20)),
+                const SizedBox(height: 50),
+              ],
+            )),
             _getVersion(),
             const SizedBox(
               height: 15,

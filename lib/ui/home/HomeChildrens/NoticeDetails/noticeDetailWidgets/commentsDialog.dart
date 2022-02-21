@@ -123,7 +123,6 @@ class _CommentsDialogState extends State<CommentsDialog> {
     return ListView.builder(
       itemCount: commentList.length,
       itemBuilder: (context, index) => Card(
-        color: Colors.black12.withOpacity(0.0001),
         child: ListTile(
           leading: Container(
             width: 50,
@@ -182,7 +181,7 @@ class _CommentsDialogState extends State<CommentsDialog> {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.grey[900],
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(8),
             topRight: Radius.circular(8),
@@ -190,25 +189,49 @@ class _CommentsDialogState extends State<CommentsDialog> {
         ),
         child: Column(
           children: [
+            const SizedBox(
+              height: 5,
+            ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.grey[900],
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
                   topRight: Radius.circular(8),
                 ),
               ),
-              height: 40,
+              height: 45,
               child: Center(
-                child: Text(
-                  "Comments",
-                  style: GoogleFonts.roboto(
-                    fontSize: 17,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: Theme.of(context).iconTheme.color,
+                        )),
+                    Text(
+                      "Comments",
+                      style: GoogleFonts.roboto(
+                        fontSize: 17,
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: Theme.of(context).cardColor,
+                        )),
+                  ],
                 ),
               ),
             ),
-            Divider(),
+            Divider(
+              thickness: 2,
+            ),
             Expanded(
               child: SmartRefresher(
                 header: WaterDropHeader(),

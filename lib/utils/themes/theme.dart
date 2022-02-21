@@ -13,9 +13,9 @@ class CustomTheme {
           primary: Constants.primary,
         ),
       ),
-      // appBarTheme: AppBarTheme().copyWith(
-      //   backgroundColor: Constants.primary,
-      // ),
+      appBarTheme: AppBarTheme().copyWith(
+        backgroundColor: Colors.white,
+      ),
       toggleableActiveColor: Constants.primary,
       primaryColorLight: Constants.primary,
       primaryColorDark: Constants.secondary,
@@ -25,6 +25,7 @@ class CustomTheme {
       primaryIconTheme: IconThemeData(
         color: Colors.black,
       ),
+      dialogBackgroundColor: Colors.grey[200],
       textTheme: TextTheme().copyWith(
         headline1: GoogleFonts.roboto(
           color: Colors.black,
@@ -69,19 +70,23 @@ class CustomTheme {
       primaryColorLight: Constants.primary,
       primaryColorDark: Constants.primary,
       scaffoldBackgroundColor: Colors.black,
-      // appBarTheme: AppBarTheme().copyWith(
-      //   backgroundColor: Constants.primary,
-      // ),
+      appBarTheme: AppBarTheme().copyWith(
+        backgroundColor: CardTheme().copyWith().color,
+      ),
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
       primaryIconTheme: IconThemeData(
         color: Colors.white,
       ),
+      dialogBackgroundColor: Colors.black54,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           primary: Constants.primary,
         ),
+      ),
+      colorScheme: ColorScheme.dark(
+        secondary: Constants.primary,
       ),
       textTheme: TextTheme().copyWith(
         headline1: GoogleFonts.roboto(

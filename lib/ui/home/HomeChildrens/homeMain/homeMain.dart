@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/notice.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/NoticeDetails/noticeDetailWidgets/commentCount.dart';
 import 'package:durkhawpui/ui/home/HomeChildrens/NoticeDetails/noticeDetailWidgets/reactionButton.dart';
 import 'package:durkhawpui/ui/home/homeSettings/settings_page.dart';
 import 'package:durkhawpui/utils/dateTimeFormat.dart';
@@ -115,9 +116,11 @@ class _HomeMainState extends State<HomeMain> {
   }
 
   Widget _body() {
+    //TODO show shimmer when loading
     return ListView.builder(
       itemCount: noticeList.length,
       itemBuilder: (context, index) => Card(
+        elevation: 2,
         child: ListTile(
           title: Text(
             noticeList[index].title,
@@ -151,12 +154,20 @@ class _HomeMainState extends State<HomeMain> {
               SizedBox(
                 height: 14,
               ),
-              Text(
-                formatDate(noticeList[index].createdAt),
-                style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12,
-                ),
+              Row(
+                children: [
+                  Text(
+                    formatDate(noticeList[index].createdAt),
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                    ),
+                  ),
+                  const Spacer(),
+                  CommentCountText(
+                    postId: noticeList[index].docId,
+                  )
+                ],
               ),
               SizedBox(
                 height: 8,
@@ -192,33 +203,35 @@ class _HomeMainState extends State<HomeMain> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).cardColor,
+          leading: Center(
+            child: SizedBox(
+              width: 30,
+              height: 30,
+              child: Image.asset('assets/ic_launcher_round.png'),
+            ),
+          ),
+          title: Text(
+            'Durkhawpui',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          centerTitle: false,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Get.to(() => SettingsPage());
+              },
+              icon: Icon(
+                Icons.settings,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            ),
+          ],
+        ),
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxScrolled) {
-            return [
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                leading: Center(
-                  child: SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset('assets/ic_launcher_round.png'),
-                  ),
-                ),
-                title: Text('Durkhawpui'),
-                centerTitle: false,
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      Get.to(() => SettingsPage());
-                    },
-                    icon: Icon(
-                      Icons.settings,
-                    ),
-                  ),
-                ],
-              ),
-            ];
+            return [];
           },
           body: SmartRefresher(
             header: WaterDropHeader(),
