@@ -36,7 +36,9 @@ class ThemeController extends GetxController {
     } catch (e) {
       themeMode = ThemeMode.system;
     }
-    setThemeMode(themeMode);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      setThemeMode(themeMode);
+    });
     return themeMode;
   }
 
