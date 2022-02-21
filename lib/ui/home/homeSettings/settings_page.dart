@@ -1,6 +1,7 @@
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/ui/commonWidgets/dialogCommon.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/homeNotices/widgets/addNotice.dart';
+import 'package:durkhawpui/ui/home/HomeChildrens/NoticeDetails/admin_widgets/addNotice.dart';
+import 'package:durkhawpui/ui/home/admin_only/NGOList/ngoList.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/notification_tile.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/them_tile.dart';
 import 'package:durkhawpui/ui/home/pages/privacy_policy.dart';
@@ -217,6 +218,24 @@ class _SettingsPageState extends State<SettingsPage> {
             trailing: Icon(Icons.chevron_right),
             onTap: () {
               Get.to(() => AddNewNotice());
+            },
+          ),
+          ListTile(
+            title: Text(
+              'NGOs',
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Get.to(() => NgoListPage());
+              },
+              icon: Icon(
+                Icons.people_alt,
+                size: 25,
+              ),
+            ),
+            onTap: () {
+              Get.to(() => NgoListPage());
             },
           ),
         ],

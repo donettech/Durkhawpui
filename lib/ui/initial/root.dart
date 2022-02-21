@@ -2,7 +2,7 @@ import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/homeMain/homeMain.dart';
+import 'package:durkhawpui/ui/home/homeMain/homeMain.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

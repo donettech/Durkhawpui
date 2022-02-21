@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/notice.dart';
@@ -53,6 +55,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
   }
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
+    log('likeTapped to ' + isLiked.toString());
     if (_userCtrl.user.value.name.toLowerCase() == "guest") {
       _userCtrl.promptLogin();
       return false;
