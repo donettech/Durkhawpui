@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/notice.dart';
@@ -10,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../NoticeDetails/NoticeDetail.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeMain extends StatefulWidget {
   const HomeMain({Key? key}) : super(key: key);
@@ -23,6 +26,7 @@ class _HomeMainState extends State<HomeMain> {
   List<Notice> noticeList = [];
   RefreshController _refreshController = RefreshController();
   final _fire = FirebaseFirestore.instance;
+  bool loading = true;
 
   QueryDocumentSnapshot? lastDoc;
 
@@ -35,6 +39,10 @@ class _HomeMainState extends State<HomeMain> {
   }
 
   void onRefresh() async {
+    setState(() {
+      noticeList.clear();
+      loading = true;
+    });
     var result = _fire
         .collection('posts')
         .limit(fetchLimit)
@@ -54,6 +62,7 @@ class _HomeMainState extends State<HomeMain> {
         lastDoc = docs.last;
       }
       setState(() {
+        loading = false;
         noticeList.addAll(_temp);
       });
       _refreshController.refreshCompleted();
@@ -116,6 +125,47 @@ class _HomeMainState extends State<HomeMain> {
   }
 
   Widget _body() {
+    if (loading) {
+      return ListView(
+        children: List.generate(15, (index) {
+          var isDarkMode = Get.isDarkMode;
+          if (isDarkMode)
+            return Card(
+              child: SizedBox(
+                  height: 150.0,
+                  child: Shimmer.fromColors(
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      elevation: 0,
+                    ),
+                    baseColor: Color(0xff1f1f1f),
+                    highlightColor: Color(0xff232323),
+                    direction: ShimmerDirection.ttb,
+                  )),
+            );
+          else
+            return Card(
+              child: SizedBox(
+                  height: 150.0,
+                  child: Shimmer.fromColors(
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      elevation: 0,
+                    ),
+                    baseColor: Colors.grey[200]!,
+                    highlightColor: Colors.grey[100]!,
+                    direction: ShimmerDirection.ttb,
+                  )),
+            );
+        }).toList(),
+      );
+    }
     //TODO show shimmer when loading
     return ListView.builder(
       itemCount: noticeList.length,
@@ -206,10 +256,16 @@ class _HomeMainState extends State<HomeMain> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).cardColor,
           leading: Center(
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: Image.asset('assets/ic_launcher_round.png'),
+            child: GestureDetector(
+              onTap: () {
+                log('logo clicked');
+                onRefresh();
+              },
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: Image.asset('assets/ic_launcher_round.png'),
+              ),
             ),
           ),
           title: Text(
