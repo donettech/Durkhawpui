@@ -64,7 +64,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   body: TextButton(
                     child: Text(
                       "Confirm",
-                      style: Theme.of(context).textTheme.button,
+                      style: GoogleFonts.roboto(
+                        color: Theme.of(context).textTheme.bodyText1!.color,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     onPressed: () {
@@ -87,7 +89,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   body: TextButton(
                     child: Text(
                       "Confirm",
-                      style: Theme.of(context).textTheme.button,
+                      style: GoogleFonts.roboto(
+                        color: Theme.of(context).textTheme.bodyText1!.color,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     onPressed: () {

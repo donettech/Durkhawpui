@@ -12,7 +12,7 @@ class CommonDialog extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          margin: EdgeInsets.symmetric(horizontal: 35, vertical: 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8)),
             color: Theme.of(context).cardColor,
@@ -21,7 +21,7 @@ class CommonDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                height: 80,
+                height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8),
@@ -32,7 +32,10 @@ class CommonDialog extends StatelessWidget {
                   child: Text(title),
                 ),
               ),
-              Divider(),
+              Divider(
+                height: 1,
+                color: Theme.of(context).textTheme.bodyText1!.color,
+              ),
               body
             ],
           ),
