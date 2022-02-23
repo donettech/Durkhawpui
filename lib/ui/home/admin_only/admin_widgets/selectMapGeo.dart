@@ -97,7 +97,7 @@ class SelectMapGeoState extends State<SelectMapGeo> {
                 ),
                 child: Center(
                   child: Text(
-                    "Hmun tihlan i duh awmna lai ah Pin hi dah rawh le",
+                    "pin_point_hint".tr,
                     style: GoogleFonts.roboto(
                       color: Colors.white,
                       fontSize: 16,

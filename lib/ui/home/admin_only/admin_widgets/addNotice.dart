@@ -70,7 +70,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
     if (description.length < 1) {
       Get.snackbar(
         'Error',
-        "Sawifiahna(Description) ziah angai",
+        "Sawifiahna ziah angai(Description required)",
         backgroundColor: Colors.red,
       );
       return;
@@ -87,7 +87,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
     if (_title.text.isEmpty) {
       Get.snackbar(
         'Error',
-        "Thupui(Title) ziah angai",
+        "Thupui ziah angai(Title required)",
         backgroundColor: Colors.red,
       );
       return;
@@ -96,7 +96,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
     if (useMap && geoPoint == null) {
       Get.snackbar(
         'Error',
-        "Map hman ala nilo",
+        "Map hman ala nilo(Map not used)",
         backgroundColor: Colors.red,
       );
       return;
@@ -195,19 +195,19 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Thuchhuah thar siamna"),
+        title: Text("new_post_creation".tr),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
               SizedBox(
                 height: 15,
               ),
-              Align(alignment: Alignment.centerLeft, child: Text('Title')),
+              Align(alignment: Alignment.centerLeft, child: Text('title'.tr)),
               SizedBox(
                 height: 5,
               ),
@@ -216,7 +216,8 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                 height: 10,
               ),
               Align(
-                  alignment: Alignment.centerLeft, child: Text('Description')),
+                  alignment: Alignment.centerLeft,
+                  child: Text('description'.tr)),
               SizedBox(
                 height: 5,
               ),
@@ -245,7 +246,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               ),
               Row(
                 children: [
-                  Text("Map a tarlan"),
+                  Text("opt_map".tr),
                   Spacer(),
                   Switch(
                     value: useMap,
@@ -300,7 +301,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   Widget _selectAttachment() {
     return Row(
       children: [
-        Text("Attachment: "),
+        Text("attachments".tr),
         if (attachmentFile != null)
           Expanded(child: Text(attachmentFile!.name.toString())),
         if (attachmentFile == null) Spacer(),
@@ -406,7 +407,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   Widget _selectNgo() {
     return Row(
       children: [
-        Text('Chhuahtu NGO'),
+        Text('authority'.tr),
         Spacer(),
         Expanded(
           child: DropdownButtonHideUnderline(
@@ -477,7 +478,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
           ),
         ));
       },
-      child: Text("Check Preview"),
+      child: Text("check_preview".tr),
     );
   }
 
@@ -489,7 +490,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         });
       },
       description,
-      label: 'Description',
+      label: 'description',
       maxLines: 5,
     );
   }
@@ -499,7 +500,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
       controller: _title,
       keyboardType: TextInputType.text,
       decoration: new InputDecoration(
-        hintText: "A thupui tawi fel takin",
+        hintText: "add_post_hint".tr,
         fillColor: Colors.white,
         border: new OutlineInputBorder(
           borderRadius: new BorderRadius.circular(8.0),
@@ -515,7 +516,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
       ),
       validator: (val) {
         if (val?.length == 0) {
-          return "Thupui ziah a ngai";
+          return "add_post_hint".tr;
         } else {
           return null;
         }
