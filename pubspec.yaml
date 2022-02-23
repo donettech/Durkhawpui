@@ -36,8 +36,7 @@ dependencies:
   bottom_navy_bar: ^6.0.0
   getwidget: ^2.0.2
   fab_circular_menu: ^1.0.2
-  # flutter_reaction_button: ^1.0.8
-  like_button: ^2.0.3
+  animate_do: ^2.1.0
   material_design_icons_flutter: ^5.0.5955-rc.1
   
 

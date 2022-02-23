@@ -1,17 +1,13 @@
-import 'dart:developer';
-
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/notice.dart';
-import 'package:durkhawpui/utils/constants.dart';
 import 'package:durkhawpui/utils/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:like_button/like_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:share/share.dart';
-
 import 'commentsDialog.dart';
 
 class ReactionButtons extends StatefulWidget {
@@ -38,8 +34,17 @@ class _ReactionButtonsState extends State<ReactionButtons> {
     likeCount = widget.staticNotice.likes;
     commentCount = widget.staticNotice.commentCount;
     _postRef = _fire.collection('posts').doc(widget.staticNotice.docId);
+    _postRef.snapshots().listen((DocumentSnapshot event) {
+      if (mounted && event.data() != null) {
+        Notice _model = Notice.fromJson(event.data()!, event.id);
+        setState(() {
+          likeCount = _model.likes;
+          commentCount = _model.commentCount;
+        });
+      }
+    });
     _likeRef = _postRef.collection('likes').doc(_userCtrl.user.value.userId);
-    _likeRef.get().then((DocumentSnapshot event) {
+    _likeRef.snapshots().listen((DocumentSnapshot event) {
       if (event.exists) {
         if (mounted)
           setState(() {
@@ -54,29 +59,38 @@ class _ReactionButtonsState extends State<ReactionButtons> {
     });
   }
 
-  Future<bool> onLikeButtonTapped(bool isLiked) async {
-    log('likeTapped to ' + isLiked.toString());
+  void onLikeTapped() async {
     if (_userCtrl.user.value.name.toLowerCase() == "guest") {
       _userCtrl.promptLogin();
-      return false;
+      return;
     }
-    if (isLiked) {
-      _likeRef.delete();
-      changeLikeCount(
-        increment: false,
-        reference: _postRef,
-      );
-      return false;
-    } else {
-      _likeRef.set({
-        'createdAt': DateTime.now(),
-      });
-      changeLikeCount(
-        increment: true,
-        reference: _postRef,
-      );
-      return true;
+    setState(() {
+      likeCount = likeCount + 1;
+      liked = true;
+    });
+    _likeRef.set({
+      'createdAt': DateTime.now(),
+    });
+    changeLikeCount(
+      increment: true,
+      reference: _postRef,
+    );
+  }
+
+  void onDislikeTapped() async {
+    if (_userCtrl.user.value.name.toLowerCase() == "guest") {
+      _userCtrl.promptLogin();
+      return;
     }
+    setState(() {
+      likeCount = likeCount - 1;
+      liked = false;
+    });
+    _likeRef.delete();
+    changeLikeCount(
+      increment: false,
+      reference: _postRef,
+    );
   }
 
   @override
@@ -86,40 +100,58 @@ class _ReactionButtonsState extends State<ReactionButtons> {
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
-              onTap: () {
-                onLikeButtonTapped(!liked);
+            child: MaterialButton(
+              onPressed: () {
+                liked ? onDislikeTapped() : onLikeTapped();
               },
-              child: LikeButton(
-                size: buttonSize,
-                circleColor:
-                    CircleColor(start: Colors.black, end: Colors.white),
-                bubblesColor: BubblesColor(
-                  dotPrimaryColor: Constants.likeColor,
-                  dotSecondaryColor: Constants.likeColor,
-                ),
-                likeBuilder: (bool isLiked) {
-                  if (isLiked)
-                    return Icon(
-                      MdiIcons.thumbUp,
-                      color: Theme.of(context).colorScheme.secondary,
-                      size: buttonSize,
-                    );
-                  return Icon(
-                    MdiIcons.thumbUpOutline,
-                    color: Theme.of(context).colorScheme.secondary,
-                    size: buttonSize,
-                  );
-                },
-                isLiked: liked,
-                likeCount: likeCount,
-                onTap: onLikeButtonTapped,
+              child: Row(
+                children: [
+                  liked
+                      ? Pulse(
+                          duration: Duration(milliseconds: 500),
+                          child: Icon(
+                            MdiIcons.thumbUp,
+                            color: Theme.of(context).primaryColor,
+                            size: buttonSize,
+                          ),
+                        )
+                      : Swing(
+                          duration: Duration(milliseconds: 500),
+                          child: Icon(
+                            MdiIcons.thumbUpOutline,
+                            color: Theme.of(context).textTheme.bodyText2!.color,
+                            size: buttonSize,
+                          ),
+                        ),
+                  SizedBox(width: 5),
+                  liked
+                      ? FadeInUp(
+                          from: 20,
+                          duration: Duration(milliseconds: 500),
+                          child: Text(
+                            likeCount.toString(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                            ),
+                          ),
+                        )
+                      : FadeInDown(
+                          from: 20,
+                          duration: Duration(milliseconds: 500),
+                          child: Text(
+                            likeCount.toString(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                ],
               ),
             ),
           ),
           Expanded(
-            child: GestureDetector(
-              onTap: () {
+            child: MaterialButton(
+              onPressed: () {
                 Get.bottomSheet(
                   CommentsDialog(
                     postId: widget.staticNotice.docId,
@@ -130,37 +162,24 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                   backgroundColor: Colors.transparent,
                 );
               },
-              child: MaterialButton(
-                onPressed: () {
-                  Get.bottomSheet(
-                    CommentsDialog(
-                      postId: widget.staticNotice.docId,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    MdiIcons.commentTextOutline,
+                    size: buttonSize,
+                    color: Theme.of(context).textTheme.bodyText2!.color,
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    "Comment",
+                    style: GoogleFonts.roboto(
+                      fontSize: 13,
                     ),
-                    isScrollControlled: true,
-                    enableDrag: true,
-                    ignoreSafeArea: false,
-                    backgroundColor: Colors.transparent,
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      MdiIcons.commentTextOutline,
-                      size: buttonSize,
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      "Comment",
-                      style: GoogleFonts.roboto(
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -193,7 +212,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                     Icon(
                       MdiIcons.shareOutline,
                       size: buttonSize + 5,
-                      color: Colors.white,
+                      color: Theme.of(context).textTheme.bodyText2!.color,
                     ),
                     SizedBox(
                       width: 5,

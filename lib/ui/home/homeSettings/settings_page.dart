@@ -1,7 +1,7 @@
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/ui/commonWidgets/dialogCommon.dart';
-import 'package:durkhawpui/ui/home/HomeChildrens/NoticeDetails/admin_widgets/addNotice.dart';
 import 'package:durkhawpui/ui/home/admin_only/NGOList/ngoList.dart';
+import 'package:durkhawpui/ui/home/admin_only/admin_widgets/addNotice.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/notification_tile.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/them_tile.dart';
 import 'package:durkhawpui/ui/home/pages/privacy_policy.dart';
