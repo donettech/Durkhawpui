@@ -7,4 +7,8 @@ class Constants {
   static const Color tabBarSelectedColor = Colors.lightBlueAccent;
   static const Color fabColor = Color(0xFF65fae4);
   static const Color likeColor = Color(0xFF65fae4);
+  static String channelId = "1";
+  static String channelName = "Notifications";
+  static String channelDesc =
+      "This channel is used for important notifications.";
 }

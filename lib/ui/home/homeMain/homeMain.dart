@@ -237,18 +237,6 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
-  // floatingActionButton:
-  //     //TODO change role
-  //     (user.role == "admin")
-  //         ? FloatingActionButton(
-  //             child: Icon(Icons.add),
-  //             onPressed: () {
-  //               Get.to(() => AddNewNotice());
-  //               // Get.to(() => Test());
-  //             },
-  //           )
-  //         : Container(),
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(

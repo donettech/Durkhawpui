@@ -114,26 +114,21 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Container(
         color: Theme.of(context).cardColor,
-        child: Column(
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
           children: [
-            Expanded(
-                child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: [
-                _buildPhoto(),
-                Padding(padding: const EdgeInsets.only(top: 20)),
-                if (userCtrl.user.value.role != "user") _buildAdminOptions(),
-                Padding(padding: const EdgeInsets.only(top: 20)),
-                _buildAppSettings(),
-                Padding(padding: const EdgeInsets.only(top: 20)),
-                _buildLegals(),
-                Padding(padding: const EdgeInsets.only(top: 20)),
-                const SizedBox(height: 50),
-              ],
-            )),
+            _buildPhoto(),
+            Padding(padding: const EdgeInsets.only(top: 20)),
+            if (userCtrl.user.value.role != "user") _buildAdminOptions(),
+            Padding(padding: const EdgeInsets.only(top: 20)),
+            _buildAppSettings(),
+            Padding(padding: const EdgeInsets.only(top: 20)),
+            _buildLegals(),
+            Padding(padding: const EdgeInsets.only(top: 20)),
+            const SizedBox(height: 50),
             _getVersion(),
             const SizedBox(
-              height: 15,
+              height: 25,
             )
           ],
         ),
@@ -147,11 +142,16 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context, snap) {
         if (snap.hasData) {
           var data = snap.data;
-          return Text(
-            "v " + data.toString(),
-            style: GoogleFonts.roboto(
-              fontSize: 12,
-            ),
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "v " + data.toString(),
+                style: GoogleFonts.roboto(
+                  fontSize: 12,
+                ),
+              ),
+            ],
           );
         }
         return Text("");

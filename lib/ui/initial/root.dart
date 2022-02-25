@@ -26,8 +26,15 @@ class _RootState extends State<Root> {
   void initState() {
     super.initState();
     listenAuth();
-    noti.handleNoti();
     Get.lazyPut(() => ImageController());
+    _checkNotiStatus();
+  }
+
+  void _checkNotiStatus() async {
+    final stat = await secure.storage.read(key: 'notification');
+    if (stat == null) {
+      await secure.switchNoti(newValue: true);
+    }
   }
 
   listenAuth() async {
