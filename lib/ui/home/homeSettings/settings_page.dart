@@ -2,6 +2,7 @@ import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/ui/commonWidgets/dialogCommon.dart';
 import 'package:durkhawpui/ui/home/admin_only/NGOList/ngoList.dart';
 import 'package:durkhawpui/ui/home/admin_only/admin_widgets/addNotice.dart';
+import 'package:durkhawpui/ui/home/admin_only/admin_widgets/admins_list_page.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/notification_tile.dart';
 import 'package:durkhawpui/ui/home/homeSettings/widgets/them_tile.dart';
 import 'package:durkhawpui/ui/home/pages/privacy_policy.dart';
@@ -121,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 _buildPhoto(),
                 Padding(padding: const EdgeInsets.only(top: 20)),
-                if (userCtrl.user.value.role == "admin") _buildAdminOptions(),
+                if (userCtrl.user.value.role != "user") _buildAdminOptions(),
                 Padding(padding: const EdgeInsets.only(top: 20)),
                 _buildAppSettings(),
                 Padding(padding: const EdgeInsets.only(top: 20)),
@@ -221,7 +222,7 @@ class _SettingsPageState extends State<SettingsPage> {
             title: Text("View admins"),
             trailing: Icon(Icons.chevron_right),
             onTap: () {
-              Get.to(() => AddNewNotice());
+              Get.to(() => AdminListPage());
             },
           ),
           ListTile(
@@ -238,6 +239,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 size: 25,
               ),
             ),
+            trailing: Icon(Icons.chevron_right),
             onTap: () {
               Get.to(() => NgoListPage());
             },

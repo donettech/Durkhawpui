@@ -195,8 +195,21 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("new_post_creation".tr),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).textTheme.bodyText1!.color,
+          ),
+          onPressed: () {
+            Get.back();
+          },
+        ),
+        title: Text(
+          "new_post_creation".tr,
+          style: Theme.of(context).textTheme.headline6!,
+        ),
         centerTitle: true,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -299,92 +312,117 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   }
 
   Widget _selectAttachment() {
-    return Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("attachments".tr),
-        if (attachmentFile != null)
-          Expanded(child: Text(attachmentFile!.name.toString())),
-        if (attachmentFile == null) Spacer(),
-        IconButton(
-          onPressed: () async {
-            var ctrl = Get.find<ImageController>();
-            PlatformFile? imgFile = await ctrl.selectImage();
-            if (imgFile == null) return;
-            File _file = File(imgFile.path!);
-            if (imgFile.extension != "pdf") {
-              var confirmed = await Get.dialog(
-                Center(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                        color: Colors.grey[500],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ConstrainedBox(
-                            constraints: new BoxConstraints(
-                              maxHeight: Get.height * 0.7,
-                            ),
-                            child: Image.file(_file),
+        Row(
+          children: [
+            Text("attachments".tr),
+            if (attachmentFile == null) Spacer(),
+            IconButton(
+              onPressed: () async {
+                var ctrl = Get.find<ImageController>();
+                PlatformFile? imgFile = await ctrl.selectImage();
+                if (imgFile == null) return;
+                File _file = File(imgFile.path!);
+                if (imgFile.extension != "pdf") {
+                  var confirmed = await Get.dialog(
+                    Center(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 25, horizontal: 15),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            color: Colors.grey[500],
                           ),
-                          Row(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: () {
-                                    Get.back();
-                                    return null;
-                                  },
-                                  icon: Icon(
-                                    Icons.cancel_outlined,
-                                    color: Colors.black,
-                                    size: 30,
-                                  ),
+                              ConstrainedBox(
+                                constraints: new BoxConstraints(
+                                  maxHeight: Get.height * 0.7,
                                 ),
+                                child: Image.file(_file),
                               ),
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: () {
-                                    attachType = 1;
-                                    Get.back(result: true);
-                                  },
-                                  icon: Icon(
-                                    Icons.done_rounded,
-                                    color: Colors.black,
-                                    size: 30,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Get.back();
+                                        return null;
+                                      },
+                                      icon: Icon(
+                                        Icons.cancel_outlined,
+                                        color: Colors.black,
+                                        size: 30,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: () {
+                                        attachType = 1;
+                                        Get.back(result: true);
+                                      },
+                                      icon: Icon(
+                                        Icons.done_rounded,
+                                        color: Colors.black,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
-                          )
-                        ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  );
+                  if (confirmed != null && confirmed) {
+                    setState(() {
+                      attachmentFile = imgFile;
+                    });
+                  }
+                } else {
+                  setState(() {
+                    attachType = 2;
+                    attachmentFile = imgFile;
+                  });
+                }
+              },
+              icon: Icon(
+                Icons.attachment_rounded,
+              ),
+            )
+          ],
+        ),
+        if (attachmentFile != null)
+          Row(
+            children: [
+              Expanded(child: Text(attachmentFile!.name.toString())),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    attachmentFile = null;
+                  });
+                },
+                icon: Icon(
+                  Icons.delete_outline_outlined,
+                  size: 20,
                 ),
-              );
-              if (confirmed != null && confirmed) {
-                setState(() {
-                  attachmentFile = imgFile;
-                });
-              }
-            } else {
-              setState(() {
-                attachType = 2;
-                attachmentFile = imgFile;
-              });
-            }
-          },
-          icon: Icon(
-            Icons.attachment_rounded,
+              )
+            ],
           ),
-        )
+        const SizedBox(
+          height: 10,
+        ),
       ],
     );
   }
@@ -415,7 +453,9 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               focusColor: Colors.white,
               value: selectedNgo,
               style: TextStyle(color: Colors.white),
-              iconEnabledColor: Colors.white,
+              // iconEnabledColor: Colors.white,
+              isDense: true,
+              isExpanded: false,
               items: ngoList.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

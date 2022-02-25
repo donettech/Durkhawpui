@@ -29,7 +29,10 @@ class CommonDialog extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: Text(title),
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
                 ),
               ),
               Divider(

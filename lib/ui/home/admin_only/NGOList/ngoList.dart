@@ -46,8 +46,21 @@ class _NgoListPageState extends State<NgoListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).textTheme.caption!.color,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          elevation: 0,
           centerTitle: true,
-          title: Text("NGO list"),
+          title: Text(
+            "NGO list",
+            style: Theme.of(context).textTheme.headline6,
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

@@ -31,7 +31,7 @@ class _AddNGOState extends State<AddNGO> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black87,
+      color: Theme.of(context).cardColor,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Form(
         key: _form,
@@ -49,11 +49,13 @@ class _AddNGOState extends State<AddNGO> {
                 fillColor: Colors.white,
                 border: new OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(15.0),
-                  borderSide: new BorderSide(color: Constants.primary),
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
                 enabledBorder: new OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(15.0),
-                  borderSide: new BorderSide(color: Constants.primary),
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
               ),
               validator: (val) {
@@ -75,11 +77,13 @@ class _AddNGOState extends State<AddNGO> {
                 fillColor: Colors.white,
                 border: new OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(15.0),
-                  borderSide: new BorderSide(color: Constants.primary),
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
                 enabledBorder: new OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(15.0),
-                  borderSide: new BorderSide(color: Constants.primary),
+                  borderSide: new BorderSide(
+                      color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
               ),
               maxLines: 5,

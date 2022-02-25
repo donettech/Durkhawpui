@@ -105,6 +105,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                 liked ? onDislikeTapped() : onLikeTapped();
               },
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   liked
                       ? Pulse(

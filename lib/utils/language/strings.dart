@@ -15,6 +15,8 @@ class Strings extends Translations {
           "add_post_hint": "Brief healine",
           "pin_point_hint":
               "Place the pin on the map where event will take place/took place",
+          "change_role_desc":
+              "You can change the role of the user by selecting the role from the dropdown",
         },
         'es_ES': {
           'post_title': 'Thuchhuah',
@@ -26,7 +28,9 @@ class Strings extends Translations {
           "attachments": "Thiltel-te",
           "check_preview": "Landan enchhinna",
           "add_post_hint": "A thupui tawi fel takin",
-          "pin_point_hint": "Hmun tihlan i duhna lai ah Pin hi dah rawh le"
+          "pin_point_hint": "Hmun tihlan i duhna lai ah Pin hi dah rawh le",
+          "change_role_desc":
+              "He member role hi thlak turin a hnuai ami atang hian thlang rawh le",
         },
       };
 }
