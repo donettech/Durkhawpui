@@ -44,6 +44,13 @@ class _ReactionButtonsState extends State<ReactionButtons> {
       }
     });
     _likeRef = _postRef.collection('likes').doc(_userCtrl.user.value.userId);
+    _likeRef.get().then((DocumentSnapshot event) {
+      if (event.exists) {
+        setState(() {
+          liked = true;
+        });
+      }
+    });
     _likeRef.snapshots().listen((DocumentSnapshot event) {
       if (event.exists) {
         if (mounted)
@@ -130,7 +137,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                           from: 20,
                           duration: Duration(milliseconds: 500),
                           child: Text(
-                            likeCount.toString(),
+                            likeCount == 0 ? "" : likeCount.toString(),
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                             ),
@@ -140,7 +147,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                           from: 20,
                           duration: Duration(milliseconds: 500),
                           child: Text(
-                            likeCount.toString(),
+                            likeCount == 0 ? "" : likeCount.toString(),
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                             ),

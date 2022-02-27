@@ -166,7 +166,6 @@ class _HomeMainState extends State<HomeMain> {
         }).toList(),
       );
     }
-    //TODO show shimmer when loading
     return ListView.builder(
       itemCount: noticeList.length,
       itemBuilder: (context, index) => Card(

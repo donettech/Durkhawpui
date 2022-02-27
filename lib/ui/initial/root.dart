@@ -1,4 +1,5 @@
 import 'package:durkhawpui/controllers/UserController.dart';
+import 'package:durkhawpui/controllers/dynamic_link_controller.dart';
 import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';
@@ -19,6 +20,7 @@ class _RootState extends State<Root> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final secure = Get.put(SecureController());
   final noti = Get.put(NotiController());
+  // final _link = Get.put(DynamicLinkController());
 
   bool? signedIn;
 
@@ -28,6 +30,11 @@ class _RootState extends State<Root> {
     listenAuth();
     Get.lazyPut(() => ImageController());
     _checkNotiStatus();
+    _checkDynamicLink();
+  }
+
+  void _checkDynamicLink() async {
+    // _link.handleDynamicLinks();
   }
 
   void _checkNotiStatus() async {

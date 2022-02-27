@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
+import 'package:durkhawpui/controllers/dynamic_link_controller.dart';
 import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/model/creator.dart';
 import 'package:durkhawpui/model/ngo.dart';
@@ -27,6 +28,7 @@ class AddNewNotice extends StatefulWidget {
 
 class _AddNewNoticeState extends State<AddNewNotice> {
   final userCtrl = Get.find<UserController>();
+  // final _link = Get.find<DynamicLinkController>();
   final _title = TextEditingController();
   final _fire = FirebaseFirestore.instance;
   List<String> ngoList = [];
@@ -40,12 +42,6 @@ class _AddNewNoticeState extends State<AddNewNotice> {
   bool notiOn = true;
   bool useMap = false;
   GeoPoint? geoPoint;
-  /* 
-  notice attachment types
-  0=none
-  1=image
-  2=pdf
-   */
 
   @override
   void initState() {
@@ -108,7 +104,12 @@ class _AddNewNoticeState extends State<AddNewNotice> {
     } else {
       excerpt = regular;
     }
+
     if (attachmentFile == null) {
+      // var _dLink = await _link.createDynamicLink(
+      //   title: _title.text,
+      //   desc: excerpt,
+      // );
       Notice model = Notice(
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -123,6 +124,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         excerpt: excerpt,
         attachmentType: attachType,
         attachmentLink: null,
+        // dynamicLink: _dLink,
         createdBy: Creator(
           id: userCtrl.user.value.userId,
           name: userCtrl.user.value.name,
@@ -157,6 +159,10 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               _url = await event.ref.getDownloadURL();
               print(_url.toString());
             }
+            // var _dLink = await _link.createDynamicLink(
+            //   title: _title.text,
+            //   desc: excerpt,
+            // );
             Notice model = Notice(
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
@@ -170,6 +176,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               desc: description,
               excerpt: excerpt,
               attachmentType: attachType,
+              // dynamicLink: _dLink,
               attachmentLink: _url,
               createdBy: Creator(
                 id: userCtrl.user.value.userId,

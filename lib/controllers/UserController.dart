@@ -23,26 +23,15 @@ class UserController extends GetxController {
     name: 'Guest',
     email: '',
     phone: '',
-    role: 'user',
+    role: 'guest',
     avatarUrl: "",
     createdAt: DateTime.now(),
   ).obs;
 
   Future<void> getUserData({required User signedInUser}) async {
     var data = await _fire.doc(signedInUser.uid).get();
-    if (!data.exists) {
-      Member tempUser = Member(
-        userId: signedInUser.uid,
-        name: signedInUser.displayName ?? "Unavailable",
-        email: signedInUser.email ?? "Unavailable",
-        phone: signedInUser.phoneNumber ?? "Unavailable",
-        role: 'user',
-        createdAt: DateTime.now(),
-        avatarUrl: signedInUser.photoURL ??
-            "https://firebasestorage.googleapis.com/v0/b/durkhawpui.appspot.com/o/dp.png?alt=media&token=b3bc695c-2b5e-4e6e-8e01-c62c9c839703",
-      );
-      _fire.doc(signedInUser.uid).set(tempUser.toJson());
-    }
+    Member temp = Member.fromJson(data.data()!, data.id);
+    user.value = temp;
     _fire.doc(signedInUser.uid).snapshots().listen((DocumentSnapshot snap) {
       Member temp = Member.fromJson(snap.data()!, snap.id);
       user.value = temp;

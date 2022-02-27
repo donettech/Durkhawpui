@@ -48,6 +48,7 @@ dependencies:
   firebase_storage: ^8.1.1
   google_maps_flutter: ^2.0.6
   flutter_local_notifications: ^9.3.2
+  firebase_dynamic_links: ^4.0.5
   permission_handler: ^7.0.0
 
   google_fonts: ^2.0.0
