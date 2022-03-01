@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:markdown_editable_textinput/markdown_text_input.dart';
+import 'package:uuid/uuid.dart';
+import '../../../../controllers/dynamic_link_controller.dart';
 import 'addMarkerName.dart';
 import 'selectMapGeo.dart';
 
@@ -25,12 +27,13 @@ class AddNewNotice extends StatefulWidget {
 
 class _AddNewNoticeState extends State<AddNewNotice> {
   final userCtrl = Get.find<UserController>();
-  // final _link = Get.find<DynamicLinkController>();
+  final _link = Get.find<DynamicLinkController>();
   final _title = TextEditingController();
   final _fire = FirebaseFirestore.instance;
   List<String> ngoList = [];
   String? selectedNgo;
   String? _markerName;
+  var uuid = Uuid();
 
   String description = "";
 
@@ -102,15 +105,18 @@ class _AddNewNoticeState extends State<AddNewNotice> {
       excerpt = regular;
     }
 
+    var _id = uuid.v4();
+
     if (attachmentFile == null) {
-      // var _dLink = await _link.createDynamicLink(
-      //   title: _title.text,
-      //   desc: excerpt,
-      // );
+      var _dLink = await _link.createDynamicLink(
+        title: _title.text,
+        desc: excerpt,
+        itemId: _id,
+      );
       Notice model = Notice(
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        docId: '',
+        docId: _id,
         ngo: selectedNgo!,
         likes: 0,
         commentCount: 0,
@@ -121,7 +127,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         excerpt: excerpt,
         attachmentType: attachType,
         attachmentLink: null,
-        // dynamicLink: _dLink,
+        dynamicLink: _dLink,
         createdBy: Creator(
           id: userCtrl.user.value.userId,
           name: userCtrl.user.value.name,
@@ -129,14 +135,17 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         useMap: useMap,
         geoPoint: geoPoint,
       );
-      _fire.collection('posts').add(model.toJson());
+      _fire.collection('posts').doc(_id).set(model.toJson());
       Get.back();
     } else {
       var ctrl = Get.find<ImageController>();
       var upStream = ctrl.uploadImage(attachmentFile!);
-      Get.dialog(Center(
-        child: CupertinoActivityIndicator(),
-      ));
+      Get.dialog(
+        Center(
+          child: CupertinoActivityIndicator(),
+        ),
+        barrierDismissible: false,
+      );
       upStream.listen((event) async {
         switch (event.state) {
           case TaskState.paused:
@@ -156,14 +165,16 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               _url = await event.ref.getDownloadURL();
               print(_url.toString());
             }
-            // var _dLink = await _link.createDynamicLink(
-            //   title: _title.text,
-            //   desc: excerpt,
-            // );
+            var _dLink = await _link.createDynamicLink(
+              title: _title.text,
+              desc: excerpt,
+              itemId: _id,
+              imageUrl: _url,
+            );
             Notice model = Notice(
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
-              docId: '',
+              docId: _id,
               likes: 0,
               commentCount: 0,
               viewCount: 0,
@@ -173,7 +184,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               desc: description,
               excerpt: excerpt,
               attachmentType: attachType,
-              // dynamicLink: _dLink,
+              dynamicLink: _dLink,
               attachmentLink: _url,
               createdBy: Creator(
                 id: userCtrl.user.value.userId,
@@ -182,7 +193,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               useMap: useMap,
               geoPoint: geoPoint,
             );
-            _fire.collection('posts').add(model.toJson());
+            _fire.collection('posts').doc(_id).set(model.toJson());
             Get.back();
             Get.back();
             break;

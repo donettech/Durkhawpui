@@ -208,22 +208,22 @@ class _ReactionButtonsState extends State<ReactionButtons> {
           Expanded(
             child: GestureDetector(
               onTap: () {
+                if (widget.staticNotice.dynamicLink == null) {
+                  return;
+                }
                 final RenderBox box = context.findRenderObject() as RenderBox;
-                //TODO put default link is no dynamic link available
-                Share.share(
-                    widget.staticNotice.dynamicLink ??
-                        "https://youtu.be/qrMwxe2ya5E",
+                Share.share(widget.staticNotice.dynamicLink!,
                     subject: widget.staticNotice.title,
                     sharePositionOrigin:
                         box.localToGlobal(Offset.zero) & box.size);
               },
               child: MaterialButton(
                 onPressed: () {
+                  if (widget.staticNotice.dynamicLink == null) {
+                    return;
+                  }
                   final RenderBox box = context.findRenderObject() as RenderBox;
-                  //TODO put default link is no dynamic link available
-                  Share.share(
-                      widget.staticNotice.dynamicLink ??
-                          "https://youtu.be/qrMwxe2ya5E",
+                  Share.share(widget.staticNotice.dynamicLink!,
                       subject: widget.staticNotice.title,
                       sharePositionOrigin:
                           box.localToGlobal(Offset.zero) & box.size);

@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/dynamic_link_controller.dart';
+
 class Root extends StatefulWidget {
   const Root({Key? key}) : super(key: key);
 
@@ -19,7 +21,7 @@ class _RootState extends State<Root> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final secure = Get.put(SecureController());
   final noti = Get.put(NotiController());
-  // final _link = Get.put(DynamicLinkController());
+  final _link = Get.put(DynamicLinkController());
 
   bool? signedIn;
 
@@ -33,7 +35,7 @@ class _RootState extends State<Root> {
   }
 
   void _checkDynamicLink() async {
-    // _link.handleDynamicLinks();
+    _link.handleDynamicLinks();
   }
 
   void _checkNotiStatus() async {
