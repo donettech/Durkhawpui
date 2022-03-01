@@ -32,8 +32,16 @@ class UserController extends GetxController {
     var data = await _fire.doc(signedInUser.uid).get();
     Member temp = Member.fromJson(data.data()!, data.id);
     user.value = temp;
-    _fire.doc(signedInUser.uid).snapshots().listen((DocumentSnapshot snap) {
-      Member temp = Member.fromJson(snap.data()!, snap.id);
+    _fire
+        .doc(signedInUser.uid)
+        .withConverter<Member>(
+          fromFirestore: (snapshots, _) =>
+              Member.fromJson(snapshots.data()!, snapshots.id),
+          toFirestore: (movie, _) => movie.toJson(),
+        )
+        .snapshots()
+        .listen((var snap) {
+      Member temp = snap.data() as Member;
       user.value = temp;
     }).onError((err) {
       print(err.toString());

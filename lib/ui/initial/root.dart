@@ -1,5 +1,4 @@
 import 'package:durkhawpui/controllers/UserController.dart';
-import 'package:durkhawpui/controllers/dynamic_link_controller.dart';
 import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/controllers/secureStorage.dart';

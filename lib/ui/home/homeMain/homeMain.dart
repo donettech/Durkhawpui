@@ -47,6 +47,11 @@ class _HomeMainState extends State<HomeMain> {
         .collection('posts')
         .limit(fetchLimit)
         .orderBy('createdAt', descending: true)
+        .withConverter<Notice>(
+          fromFirestore: (snapshots, _) =>
+              Notice.fromJson(snapshots.data()!, snapshots.id),
+          toFirestore: (movie, _) => movie.toJson(),
+        )
         .snapshots();
     result.listen((event) {
       setState(() {
@@ -55,7 +60,7 @@ class _HomeMainState extends State<HomeMain> {
       List<QueryDocumentSnapshot> docs = event.docs;
       List<Notice> _temp = [];
       docs.forEach((QueryDocumentSnapshot element) {
-        Notice temp = Notice.fromJson(element.data(), element.id);
+        Notice temp = element.data() as Notice;
         _temp.add(temp);
       });
       if (docs.isNotEmpty) {
@@ -77,11 +82,16 @@ class _HomeMainState extends State<HomeMain> {
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
             .startAfterDocument(lastDoc!)
+            .withConverter<Notice>(
+              fromFirestore: (snapshots, _) =>
+                  Notice.fromJson(snapshots.data()!, snapshots.id),
+              toFirestore: (movie, _) => movie.toJson(),
+            )
             .get();
         List<QueryDocumentSnapshot> docs = result.docs;
         List<Notice> _temp = [];
         docs.forEach((QueryDocumentSnapshot element) {
-          Notice temp = Notice.fromJson(element.data(), element.id);
+          Notice temp = element.data() as Notice;
           _temp.add(temp);
         });
         if (docs.isNotEmpty) {
@@ -100,13 +110,18 @@ class _HomeMainState extends State<HomeMain> {
             .collection('posts')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
+            .withConverter<Notice>(
+              fromFirestore: (snapshots, _) =>
+                  Notice.fromJson(snapshots.data()!, snapshots.id),
+              toFirestore: (movie, _) => movie.toJson(),
+            )
             .snapshots();
         result.listen((event) {
           noticeList.clear();
           List<QueryDocumentSnapshot> docs = event.docs;
           List<Notice> _temp = [];
           docs.forEach((QueryDocumentSnapshot element) {
-            Notice temp = Notice.fromJson(element.data(), element.id);
+            Notice temp = element.data() as Notice;
             _temp.add(temp);
           });
           if (docs.isNotEmpty) {

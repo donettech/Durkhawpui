@@ -27,46 +27,46 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.4
 
-  get: ^4.1.4 
+  get: ^4.6.1 
   pull_to_refresh: ^2.0.0
   shimmer: ^2.0.0
 
   bottom_navy_bar: ^6.0.0
-  getwidget: ^2.0.2
+  getwidget: ^2.0.5
   fab_circular_menu: ^1.0.2
   animate_do: ^2.1.0
-  material_design_icons_flutter: ^5.0.5955-rc.1
+  material_design_icons_flutter: ^5.0.6595
   
 
-  firebase_core: ^1.0.4
-  firebase_auth: ^1.1.1
-  google_sign_in: ^5.0.4
-  cloud_firestore: ^1.0.6 
-  firebase_messaging: ^10.0.2
-  firebase_storage: ^8.1.1
-  google_maps_flutter: ^2.0.6
-  flutter_local_notifications: ^9.3.2
-  firebase_dynamic_links: ^4.0.5
-  permission_handler: ^7.0.0
+  firebase_core: ^1.12.0
+  firebase_auth: ^3.3.8
+  google_sign_in: ^5.2.4
+  cloud_firestore: ^3.1.9 
+  firebase_messaging: ^11.2.7
+  firebase_storage: ^10.2.8
+  google_maps_flutter: ^2.1.1
+  flutter_local_notifications: ^9.3.3
+  firebase_dynamic_links: ^4.0.7
+  permission_handler: ^9.0.2
 
-  google_fonts: ^2.0.0
-  cached_network_image: ^3.0.0
-  photo_view: ^0.10.3
-  file_picker: ^3.0.3
+  google_fonts: ^2.3.0
+  cached_network_image: ^3.2.0
+  photo_view: ^0.13.0
+  file_picker: ^4.4.0
 
-  flutter_markdown: ^0.6.2
-  markdown_editable_textinput: ^2.0.0
+  flutter_markdown: ^0.6.9
+  markdown_editable_textinput: ^2.0.2
 
   package_info_plus: ^1.4.0
   intl: ^0.17.0
-  url_launcher: ^6.0.3
-  share: ^2.0.1
+  url_launcher: ^6.0.20
+  share: ^2.0.4
 
-  flutter_secure_storage: ^4.2.0
+  flutter_secure_storage: ^5.0.2
   shared_preferences: ^2.0.13
-  flutter_cached_pdfview: ^0.4.0-nullsafety 
+  flutter_cached_pdfview: ^0.4.1 
 
   # gpay plugin
   # pay: ^1.0.5

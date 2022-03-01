@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:share/share.dart';
+import '../../../../model/like.dart';
 import 'commentsDialog.dart';
 
 class ReactionButtons extends StatefulWidget {
@@ -33,17 +34,31 @@ class _ReactionButtonsState extends State<ReactionButtons> {
     super.initState();
     likeCount = widget.staticNotice.likes;
     commentCount = widget.staticNotice.commentCount;
-    _postRef = _fire.collection('posts').doc(widget.staticNotice.docId);
+    _postRef = _fire
+        .collection('posts')
+        .doc(widget.staticNotice.docId)
+        .withConverter<Notice>(
+          fromFirestore: (snapshots, _) =>
+              Notice.fromJson(snapshots.data()!, snapshots.id),
+          toFirestore: (movie, _) => movie.toJson(),
+        );
     _postRef.snapshots().listen((DocumentSnapshot event) {
       if (mounted && event.data() != null) {
-        Notice _model = Notice.fromJson(event.data()!, event.id);
+        Notice _model = event.data() as Notice;
         setState(() {
           likeCount = _model.likes;
           commentCount = _model.commentCount;
         });
       }
     });
-    _likeRef = _postRef.collection('likes').doc(_userCtrl.user.value.userId);
+    _likeRef = _postRef
+        .collection('likes')
+        .doc(_userCtrl.user.value.userId)
+        .withConverter<LikeModel>(
+          fromFirestore: (snapshots, _) =>
+              LikeModel.fromJson(snapshots.data()!),
+          toFirestore: (movie, _) => movie.toJson(),
+        );
     _likeRef.get().then((DocumentSnapshot event) {
       if (event.exists) {
         setState(() {
@@ -75,12 +90,10 @@ class _ReactionButtonsState extends State<ReactionButtons> {
       likeCount = likeCount + 1;
       liked = true;
     });
-    _likeRef.set({
-      'createdAt': DateTime.now(),
-    });
     changeLikeCount(
       increment: true,
-      reference: _postRef,
+      userId: _userCtrl.user.value.userId,
+      postReference: _postRef,
     );
   }
 
@@ -96,7 +109,8 @@ class _ReactionButtonsState extends State<ReactionButtons> {
     _likeRef.delete();
     changeLikeCount(
       increment: false,
-      reference: _postRef,
+      userId: _userCtrl.user.value.userId,
+      postReference: _postRef,
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:durkhawpui/model/page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,17 +16,25 @@ class PrivacyPolicy extends StatelessWidget {
         centerTitle: true,
       ),
       body: FutureBuilder(
-          future: _fire.doc('privacy').get(),
+          future: _fire
+              .doc('privacy')
+              .withConverter<PageModel>(
+                fromFirestore: (snapshots, _) =>
+                    PageModel.fromJson(snapshots.data()!, id: snapshots.id),
+                toFirestore: (movie, _) => movie.toJson(),
+              )
+              .get(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              DocumentSnapshot obj = snapshot.data as DocumentSnapshot;
+              DocumentSnapshot data = snapshot.data as DocumentSnapshot;
+              PageModel pageModel = data.data() as PageModel;
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Text(
-                    obj.data()!['text'],
+                    pageModel.text,
                     style: GoogleFonts.roboto(
                       fontSize: 14,
                     ),

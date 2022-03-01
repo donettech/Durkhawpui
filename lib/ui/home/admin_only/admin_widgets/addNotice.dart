@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
-import 'package:durkhawpui/controllers/dynamic_link_controller.dart';
 import 'package:durkhawpui/controllers/imageController.dart';
 import 'package:durkhawpui/model/creator.dart';
 import 'package:durkhawpui/model/ngo.dart';
@@ -15,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:markdown_editable_textinput/markdown_text_input.dart';
-
 import 'addMarkerName.dart';
 import 'selectMapGeo.dart';
 

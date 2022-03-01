@@ -30,7 +30,7 @@ class _AdminListPageState extends State<AdminListPage> {
   @override
   void initState() {
     super.initState();
-    onLoading();
+    onRefresh();
   }
 
   void onRefresh() async {
@@ -43,11 +43,16 @@ class _AdminListPageState extends State<AdminListPage> {
         .collection('users')
         .limit(fetchLimit)
         .where('role', isNotEqualTo: "user")
+        .withConverter<Member>(
+          fromFirestore: (snapshots, _) =>
+              Member.fromJson(snapshots.data()!, snapshots.id),
+          toFirestore: (movie, _) => movie.toJson(),
+        )
         .get();
     List<QueryDocumentSnapshot> docs = result.docs;
     List<Member> _temp = [];
     docs.forEach((QueryDocumentSnapshot element) {
-      Member temp = Member.fromJson(element.data(), element.id);
+      Member temp = element.data() as Member;
       _temp.add(temp);
     });
     if (docs.isNotEmpty) {
@@ -69,11 +74,16 @@ class _AdminListPageState extends State<AdminListPage> {
             .limit(fetchLimit)
             .where('role', isNotEqualTo: "user")
             .startAfterDocument(lastDoc!)
+            .withConverter<Member>(
+              fromFirestore: (snapshots, _) =>
+                  Member.fromJson(snapshots.data()!, snapshots.id),
+              toFirestore: (movie, _) => movie.toJson(),
+            )
             .get();
         List<QueryDocumentSnapshot> docs = result.docs;
         List<Member> _temp = [];
         docs.forEach((QueryDocumentSnapshot element) {
-          Member temp = Member.fromJson(element.data(), element.id);
+          Member temp = element as Member;
           _temp.add(temp);
         });
         if (docs.isNotEmpty) {
@@ -93,11 +103,16 @@ class _AdminListPageState extends State<AdminListPage> {
             .collection('users')
             .limit(fetchLimit)
             .where('role', isNotEqualTo: "user")
+            .withConverter<Member>(
+              fromFirestore: (snapshots, _) =>
+                  Member.fromJson(snapshots.data()!, snapshots.id),
+              toFirestore: (movie, _) => movie.toJson(),
+            )
             .get();
         List<QueryDocumentSnapshot> docs = result.docs;
         List<Member> _temp = [];
         docs.forEach((QueryDocumentSnapshot element) {
-          Member temp = Member.fromJson(element.data(), element.id);
+          Member temp = element as Member;
           _temp.add(temp);
         });
         if (docs.isNotEmpty) {

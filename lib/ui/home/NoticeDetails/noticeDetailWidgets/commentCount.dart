@@ -11,11 +11,18 @@ class CommentCountText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-      stream: _fire.doc(postId).snapshots(),
+      stream: _fire
+          .doc(postId)
+          .withConverter<Notice>(
+            fromFirestore: (snapshots, _) =>
+                Notice.fromJson(snapshots.data()!, snapshots.id),
+            toFirestore: (movie, _) => movie.toJson(),
+          )
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           DocumentSnapshot snap = snapshot.data as DocumentSnapshot;
-          Notice _notice = Notice.fromJson(snap.data()!, snap.id);
+          Notice _notice = snap.data() as Notice;
           if (_notice.commentCount < 1) return Container();
           return Row(
             mainAxisSize: MainAxisSize.min,

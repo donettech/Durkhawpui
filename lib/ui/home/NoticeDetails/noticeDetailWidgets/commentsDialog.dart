@@ -4,11 +4,9 @@ import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/model/comment.dart';
 import 'package:durkhawpui/utils/dateTimeFormat.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import 'addComment.dart';
 
 class CommentsDialog extends StatefulWidget {
@@ -42,13 +40,18 @@ class _CommentsDialogState extends State<CommentsDialog> {
         .collection('comments')
         .limit(fetchLimit)
         .orderBy('createdAt', descending: true)
+        .withConverter<Comment>(
+          fromFirestore: (snapshots, _) =>
+              Comment.fromJson(snapshots.data()!, snapshots.id),
+          toFirestore: (movie, _) => movie.toJson(),
+        )
         .snapshots();
     result.listen((event) {
       commentList.clear();
       List<QueryDocumentSnapshot> docs = event.docs;
       List<Comment> _temp = [];
       docs.forEach((QueryDocumentSnapshot element) {
-        Comment temp = Comment.fromJson(element.data(), element.id);
+        Comment temp = element.data() as Comment;
         _temp.add(temp);
       });
       if (docs.isNotEmpty) {
@@ -71,11 +74,16 @@ class _CommentsDialogState extends State<CommentsDialog> {
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
             .startAfterDocument(lastDoc!)
+            .withConverter<Comment>(
+              fromFirestore: (snapshots, _) =>
+                  Comment.fromJson(snapshots.data()!, snapshots.id),
+              toFirestore: (movie, _) => movie.toJson(),
+            )
             .get();
         List<QueryDocumentSnapshot> docs = result.docs;
         List<Comment> _temp = [];
         docs.forEach((QueryDocumentSnapshot element) {
-          Comment temp = Comment.fromJson(element.data(), element.id);
+          Comment temp = element.data() as Comment;
           _temp.add(temp);
         });
         if (docs.isNotEmpty) {
@@ -96,13 +104,18 @@ class _CommentsDialogState extends State<CommentsDialog> {
             .collection('comments')
             .limit(fetchLimit)
             .orderBy('createdAt', descending: true)
+            .withConverter<Comment>(
+              fromFirestore: (snapshots, _) =>
+                  Comment.fromJson(snapshots.data()!, snapshots.id),
+              toFirestore: (movie, _) => movie.toJson(),
+            )
             .snapshots();
         result.listen((event) {
           commentList.clear();
           List<QueryDocumentSnapshot> docs = event.docs;
           List<Comment> _temp = [];
           docs.forEach((QueryDocumentSnapshot element) {
-            Comment temp = Comment.fromJson(element.data(), element.id);
+            Comment temp = element.data() as Comment;
             _temp.add(temp);
           });
           if (docs.isNotEmpty) {
