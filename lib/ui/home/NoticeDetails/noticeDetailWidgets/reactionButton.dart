@@ -60,7 +60,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
           toFirestore: (movie, _) => movie.toJson(),
         );
     _likeRef.get().then((DocumentSnapshot event) {
-      if (event.exists) {
+      if (event.exists && mounted) {
         setState(() {
           liked = true;
         });

@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:durkhawpui/controllers/UserController.dart';
 import 'package:durkhawpui/controllers/imageController.dart';
+import 'package:durkhawpui/controllers/notiController.dart';
 import 'package:durkhawpui/model/creator.dart';
 import 'package:durkhawpui/model/ngo.dart';
 import 'package:durkhawpui/model/notice.dart';
@@ -28,6 +30,7 @@ class AddNewNotice extends StatefulWidget {
 class _AddNewNoticeState extends State<AddNewNotice> {
   final userCtrl = Get.find<UserController>();
   final _link = Get.find<DynamicLinkController>();
+  final _noti = Get.find<NotiController>();
   final _title = TextEditingController();
   final _fire = FirebaseFirestore.instance;
   List<String> ngoList = [];
@@ -60,6 +63,16 @@ class _AddNewNoticeState extends State<AddNewNotice> {
     setState(() {
       if (ngoList.isNotEmpty) selectedNgo = ngoList.first;
     });
+  }
+
+  void sendNotification(Notice notice) async {
+    log('sending notification');
+    await _noti.sendMessage(
+      title: notice.title,
+      excerpt: notice.excerpt,
+      itemId: notice.docId,
+    );
+    log('sending notification DONE');
   }
 
   void confirmPressed() async {
@@ -135,6 +148,9 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         useMap: useMap,
         geoPoint: geoPoint,
       );
+      if (notiOn) {
+        sendNotification(model);
+      }
       _fire.collection('posts').doc(_id).set(model.toJson());
       Get.back();
     } else {
@@ -193,6 +209,9 @@ class _AddNewNoticeState extends State<AddNewNotice> {
               useMap: useMap,
               geoPoint: geoPoint,
             );
+            if (notiOn) {
+              sendNotification(model);
+            }
             _fire.collection('posts').doc(_id).set(model.toJson());
             Get.back();
             Get.back();
@@ -262,7 +281,6 @@ class _AddNewNoticeState extends State<AddNewNotice> {
                 children: [
                   Text("Notification "),
                   Spacer(),
-                  //TODO notification thawn ngai
                   Switch(
                       value: notiOn,
                       onChanged: (newValue) {

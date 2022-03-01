@@ -25,9 +25,6 @@ class DynamicLinkController extends GetxController {
     if (deepLink.pathSegments.length > 0 &&
         deepLink.pathSegments[0] == "post") {
       Get.to(() => NoticeDetailLink(noticeId: deepLink.pathSegments[1]));
-      // Get.off();
-      /* _navigationService.replaceNavWith(SinglePostDetailsDlinkRoute,
-            arguments: {"postID": deepLink.pathSegments[1]}); */
     }
   }
 

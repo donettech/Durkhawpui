@@ -119,7 +119,9 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             _buildPhoto(),
             Padding(padding: const EdgeInsets.only(top: 20)),
-            if (userCtrl.user.value.role != "user") _buildAdminOptions(),
+            if (userCtrl.user.value.role != "guest" &&
+                userCtrl.user.value.role != "user")
+              _buildAdminOptions(),
             Padding(padding: const EdgeInsets.only(top: 20)),
             _buildAppSettings(),
             Padding(padding: const EdgeInsets.only(top: 20)),

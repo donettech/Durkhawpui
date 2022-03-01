@@ -11,4 +11,6 @@ class Constants {
   static String channelName = "Notifications";
   static String channelDesc =
       "This channel is used for important notifications.";
+  static String fcmKey =
+      "AAAAxwffVbs:APA91bGY2a2hwcFkv6M7JLF0go_1-QGQEpbH1yGiCBhkugazRCCQ-ZnwR22TRCvfcLk6qrtrEGDvK6-htzoGWauidz5an2FHl0nwBbpMktmySQBPp568VOLHjPmbGz8Z3kcgV98pdGnF";
 }

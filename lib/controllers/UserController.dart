@@ -83,6 +83,7 @@ class UserController extends GetxController {
 
   Future<void> handleSignIn() async {
     try {
+      Get.back();
       Get.dialog(Center(
         child: CupertinoActivityIndicator(),
       ));

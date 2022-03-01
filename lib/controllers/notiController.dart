@@ -14,6 +14,7 @@ import '../main.dart';
 class NotiController extends GetxController {
   final _messaging = FirebaseMessaging.instance;
   final _fire = FirebaseFirestore.instance;
+  final String fcmURL = 'https://fcm.googleapis.com/fcm/send';
 
   Future<String> getToken() async {
     var _token = await _messaging.getToken() ?? "";
@@ -36,6 +37,7 @@ class NotiController extends GetxController {
       Map<String, dynamic> data = initialMsg.data;
       log("Notification opened app initial msg->" + data.toString());
       handlePayload(data, false);
+      //TODO: Handle notification payload hi a dik vek em la check lo
     } else {
       FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
         log("Notification during app open->" + event.data.toString());
@@ -116,7 +118,7 @@ class NotiController extends GetxController {
           NotificationDetails(android: androidPlatformChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(
           1,
-          notification?.title ?? "Sikul Notification",
+          notification?.title ?? "Durkhawpui Notification",
           notification?.body ?? "",
           platformChannelSpecifics,
           payload: jsonEncode(event.data));
@@ -127,6 +129,48 @@ class NotiController extends GetxController {
       await flutterLocalNotificationsPlugin.show(
           1, data['title'], data['body'], platformChannelSpecifics,
           payload: jsonEncode(event.data['data']));
+    }
+  }
+
+  Future<bool?> sendMessage({
+    required String title,
+    required String excerpt,
+    required itemId,
+  }) async {
+    try {
+      var body = {
+        "notification": {
+          "title": title,
+          "body": excerpt,
+          "sound": "default",
+          "click_action": "FLUTTER_NOTIFICATION_CLICK"
+        },
+        "data": {
+          "title": title,
+          "body": excerpt,
+          "id": itemId,
+          "type": "general",
+        },
+        "to": "/topics/general",
+      };
+      var result = await GetConnect().post(
+        fcmURL,
+        jsonEncode(body),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "key=" + Constants.fcmKey,
+        },
+      );
+      if (result.statusCode == 200) {
+        log('FCM result=>' + result.body.toString());
+        return true;
+      } else {
+        log("Error sending message->" + result.body);
+        return false;
+      }
+    } catch (e) {
+      log(e.toString());
+      return null;
     }
   }
 }
