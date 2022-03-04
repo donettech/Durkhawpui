@@ -17,6 +17,9 @@ class Strings extends Translations {
               "Place the pin on the map where event will take place/took place",
           "change_role_desc":
               "You can change the role of the user by selecting the role from the dropdown",
+          "add_admin": "Add Admin",
+          "add_admin_desc":
+              "Enter the email of the user you want to add as admin",
         },
         'es_ES': {
           'post_title': 'Thuchhuah',
@@ -31,6 +34,9 @@ class Strings extends Translations {
           "pin_point_hint": "Hmun tihlan i duhna lai ah Pin hi dah rawh le",
           "change_role_desc":
               "He member role hi thlak turin a hnuai ami atang hian thlang rawh le",
+          "add_admin": "Admin belhna",
+          "add_admin_desc":
+              "Admin thar siambelh turin a hnuai ah hian an email chhu rawh le",
         },
       };
 }

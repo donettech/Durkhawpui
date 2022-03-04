@@ -72,7 +72,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     onPressed: () {
                       Get.back();
-                      userCtrl.handleSignIn().then((value) => setState(() {}));
+                      userCtrl.handleSignIn().then((value) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      });
                     },
                   ),
                 ));

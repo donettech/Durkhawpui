@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'add_admin.dart';
 import 'change_admin_role.dart';
 
 class AdminListPage extends StatefulWidget {
@@ -141,82 +142,83 @@ class _AdminListPageState extends State<AdminListPage> {
         child: Card(
           elevation: 4,
           child: ListTile(
-              leading: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                          adminList[index].avatarUrl),
-                      fit: BoxFit.cover),
+            leading: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image:
+                        CachedNetworkImageProvider(adminList[index].avatarUrl),
+                    fit: BoxFit.cover),
+              ),
+            ),
+            title: Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Text(
+                adminList[index].name,
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              title: Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Text(
-                  adminList[index].name,
+            ),
+            subtitle: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  adminList[index].email,
                   style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ),
-              subtitle: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    adminList[index].email,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Role: ",
+                      style: GoogleFonts.roboto(
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Role: ",
-                        style: GoogleFonts.roboto(
-                          fontSize: 12,
-                        ),
+                    Text(
+                      adminList[index].role,
+                      style: GoogleFonts.roboto(
+                        fontSize: 12,
                       ),
-                      Text(
-                        adminList[index].role,
-                        style: GoogleFonts.roboto(
-                          fontSize: 12,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+            trailing: userCtrl.user.value.role == "super"
+                ? IconButton(
+                    onPressed: () {
+                      Get.dialog(
+                        ChangeAdminRoleDialog(
+                          member: adminList[index],
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
+                        barrierColor: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .color!
+                            .withOpacity(0.5),
+                      ).then((value) => value == null ? null : onRefresh());
+                    },
+                    icon: Icon(
+                      Icons.change_circle_outlined,
+                    ),
                   )
-                ],
-              ),
-              trailing: userCtrl.user.value.role == "super"
-                  ? IconButton(
-                      onPressed: () {
-                        Get.dialog(
-                          ChangeAdminRoleDialog(
-                            member: adminList[index],
-                          ),
-                          barrierColor: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .color!
-                              .withOpacity(0.5),
-                        ).then((value) => value == null ? null : onRefresh());
-                      },
-                      icon: Icon(
-                        Icons.change_circle_outlined,
-                      ),
-                    )
-                  : const SizedBox()),
+                : const SizedBox(),
+          ),
         ),
       ),
     );
@@ -242,6 +244,36 @@ class _AdminListPageState extends State<AdminListPage> {
         centerTitle: true,
         elevation: 0,
       ),
+      floatingActionButton: userCtrl.user.value.role == "super"
+          ? ElevatedButton(
+              onPressed: () {
+                Get.dialog(AddAdmin(
+                  onConfirm: (newUser) {
+                    if (newUser.role == "admin" || newUser.role == "super") {
+                      Get.snackbar("Error", "User is already an admin");
+                    } else {
+                      _fire
+                          .collection('users')
+                          .doc(newUser.userId)
+                          .update({'role': 'admin'}).then((value) {
+                        Get.snackbar("Success", "User is now an admin");
+                      });
+                    }
+                  },
+                ));
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.add),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text('add_admin'.tr),
+                ],
+              ),
+            )
+          : const SizedBox(),
       body: SmartRefresher(
         header: WaterDropHeader(),
         footer: ClassicFooter(),
