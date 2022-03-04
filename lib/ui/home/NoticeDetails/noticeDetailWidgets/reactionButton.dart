@@ -137,7 +137,7 @@ class _ReactionButtonsState extends State<ReactionButtons> {
                             size: buttonSize,
                           ),
                         )
-                      : Swing(
+                      : FadeIn(
                           duration: Duration(milliseconds: 500),
                           child: Icon(
                             MdiIcons.thumbUpOutline,

@@ -29,7 +29,7 @@ class _NoticeDetailsState extends State<NoticeDetails>
               Get.back();
             },
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back,
               color: Theme.of(context).iconTheme.color,
             ),
           ),

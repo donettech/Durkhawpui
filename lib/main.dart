@@ -47,7 +47,7 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
-      android: AndroidInitializationSettings('ic_launcher'),
+      android: AndroidInitializationSettings('ic_notification'),
       iOS: IOSInitializationSettings(),
     ),
   );

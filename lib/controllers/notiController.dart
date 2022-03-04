@@ -37,7 +37,6 @@ class NotiController extends GetxController {
       Map<String, dynamic> data = initialMsg.data;
       log("Notification opened app initial msg->" + data.toString());
       handlePayload(data, false);
-      //TODO: Handle notification payload hi a dik vek em la check lo
     } else {
       FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
         log("Notification during app open->" + event.data.toString());
@@ -58,22 +57,26 @@ class NotiController extends GetxController {
       switch (type.toString().toLowerCase()) {
         case "general":
           {
-            int itemId = int.parse(data['id']);
             Get.dialog(Center(
               child: CupertinoActivityIndicator(),
             ));
-            var snap =
-                await _fire.collection('posts').doc(itemId.toString()).get();
-            Notice _notice = Notice.fromJson(snap.data()!, snap.id);
-            Get.back();
-            Get.to(() => NoticeDetails(notice: _notice));
+            try {
+              String itemId = data['id'];
+
+              var snap = await _fire.collection('posts').doc(itemId).get();
+              Notice _notice = Notice.fromJson(snap.data()!, snap.id);
+              Get.back();
+              Get.to(() => NoticeDetails(notice: _notice));
+            } catch (e) {
+              Get.back();
+            }
             break;
           }
       }
     } else {
       switch (type.toString().toLowerCase()) {
         case "general":
-          String itemId = (data['id']);
+          String itemId = data['id'];
           runApp(
             GetMaterialApp(
               debugShowCheckedModeBanner: false,
@@ -98,7 +101,7 @@ class NotiController extends GetxController {
     );
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
-        android: AndroidInitializationSettings('ic_launcher'),
+        android: AndroidInitializationSettings('ic_notification'),
         iOS: IOSInitializationSettings(),
       ),
       onSelectNotification: (payload) async {

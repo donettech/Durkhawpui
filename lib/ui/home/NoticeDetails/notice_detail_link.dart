@@ -50,7 +50,7 @@ class _NoticeDetailLinkState extends State<NoticeDetailLink>
               Get.back();
             },
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back,
               color: Theme.of(context).iconTheme.color,
             ),
           ),
