@@ -31,13 +31,14 @@ class NotiController extends GetxController {
   }
 
   Future<void> setupMessaging() async {
-    getToken();
     RemoteMessage? initialMsg = await _messaging.getInitialMessage();
     if (initialMsg != null) {
+      log('initial message not empty ' + initialMsg.toString());
       Map<String, dynamic> data = initialMsg.data;
       log("Notification opened app initial msg->" + data.toString());
       handlePayload(data, false);
     } else {
+      log('initial message empty');
       FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
         log("Notification during app open->" + event.data.toString());
         showLocalNoti(event);
@@ -62,7 +63,6 @@ class NotiController extends GetxController {
             ));
             try {
               String itemId = data['id'];
-
               var snap = await _fire.collection('posts').doc(itemId).get();
               Notice _notice = Notice.fromJson(snap.data()!, snap.id);
               Get.back();

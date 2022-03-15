@@ -43,100 +43,102 @@ class _NoticeDetailLinkState extends State<NoticeDetailLink>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: Theme.of(context).iconTheme.color,
-            ),
-          ),
-          elevation: 0,
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notice.ngo + " ",
-                style: Theme.of(context).textTheme.subtitle1,
+    return loading
+        ? SizedBox()
+        : Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).iconTheme.color,
+                ),
               ),
-              Text(
-                "post_title".tr,
-                style: Theme.of(context).textTheme.subtitle1,
-              )
-            ],
-          ),
-          centerTitle: true,
-        ),
-        body: loading
-            ? Center(
-                child: CupertinoActivityIndicator(),
-              )
-            : Container(
-                width: double.infinity,
-                height: double.infinity,
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        notice.title,
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      _buildMd(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        notice.ngo.toUpperCase(),
-                        style: GoogleFonts.roboto(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      Text(
-                        _formatDate(notice.createdAt),
-                        style: GoogleFonts.roboto(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      NoticeAttachmentBuilder(
-                        attachmentType: notice.attachmentType,
-                        useMap: notice.useMap,
-                        location: notice.geoPoint,
-                        attachmentLink: notice.attachmentLink,
-                        markerName: notice.markerName,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+              elevation: 0,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    notice.ngo + " ",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  Text(
+                    "post_title".tr,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  )
+                ],
+              ),
+              centerTitle: true,
+            ),
+            body: loading
+                ? Center(
+                    child: CupertinoActivityIndicator(),
+                  )
+                : Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          CommentCountText(
-                            postId: notice.docId,
+                          Text(
+                            notice.title,
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          _buildMd(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            notice.ngo.toUpperCase(),
+                            style: GoogleFonts.roboto(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          Text(
+                            _formatDate(notice.createdAt),
+                            style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          NoticeAttachmentBuilder(
+                            attachmentType: notice.attachmentType,
+                            useMap: notice.useMap,
+                            location: notice.geoPoint,
+                            attachmentLink: notice.attachmentLink,
+                            markerName: notice.markerName,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              CommentCountText(
+                                postId: notice.docId,
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          ReactionButtons(staticNotice: notice),
+                          Divider(),
                         ],
                       ),
-                      Divider(),
-                      ReactionButtons(staticNotice: notice),
-                      Divider(),
-                    ],
-                  ),
-                ),
-              ));
+                    ),
+                  ));
   }
 
   Widget _buildMd() {
