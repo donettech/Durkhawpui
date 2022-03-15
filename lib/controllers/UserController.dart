@@ -63,7 +63,7 @@ class UserController extends GetxController {
         title: Text("Login Required"),
         content: Text("Please login to continue"),
         actions: [
-          ElevatedButton(
+          MaterialButton(
             child: Row(
               children: [
                 Expanded(

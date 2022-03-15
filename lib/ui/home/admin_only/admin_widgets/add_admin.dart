@@ -138,12 +138,18 @@ class _AddAdminState extends State<AddAdmin> {
                               ),
                             ),
                           )
-                        : Text('Search'),
+                        : Text(
+                            'Search',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                   ),
                 if (results.isNotEmpty)
                   ElevatedButton(
                     onPressed: (_selected != null) ? confirmAdd : null,
-                    child: Text('Confirm'),
+                    child: Text(
+                      'Confirm',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
               ],
             ),

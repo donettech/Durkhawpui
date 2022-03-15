@@ -265,11 +265,17 @@ class _AdminListPageState extends State<AdminListPage> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.add),
+                  Icon(
+                    Icons.add,
+                    color: Theme.of(context).textTheme.bodyLarge!.color!,
+                  ),
                   const SizedBox(
                     width: 8,
                   ),
-                  Text('add_admin'.tr),
+                  Text(
+                    'add_admin'.tr,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ],
               ),
             )

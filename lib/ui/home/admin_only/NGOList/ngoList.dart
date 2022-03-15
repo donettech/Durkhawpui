@@ -71,7 +71,10 @@ class _NgoListPageState extends State<NgoListPage> {
               ),
             ));
           },
-          child: Icon(Icons.add),
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).textTheme.bodyLarge!.color!,
+          ),
         ),
         body: ListView.builder(
           itemCount: ngoList.length,

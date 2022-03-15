@@ -48,12 +48,12 @@ class _AddNGOState extends State<AddNGO> {
                 hintText: "Hming(Kaih tawi ni thei se)",
                 fillColor: Colors.white,
                 border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15.0),
+                  borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(
                       color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
                 enabledBorder: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15.0),
+                  borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(
                       color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
@@ -76,12 +76,12 @@ class _AddNGOState extends State<AddNGO> {
                 hintText: "Sawifiahna",
                 fillColor: Colors.white,
                 border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15.0),
+                  borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(
                       color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
                 enabledBorder: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15.0),
+                  borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(
                       color: Theme.of(context).textTheme.bodyText1!.color!),
                 ),
@@ -127,7 +127,10 @@ class _AddNGOState extends State<AddNGO> {
               style: ElevatedButton.styleFrom(
                 primary: Constants.primary,
               ),
-              child: Text("Confirm"),
+              child: Text(
+                "Confirm",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ),
             SizedBox(
               height: 15,

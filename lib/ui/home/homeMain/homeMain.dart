@@ -35,7 +35,16 @@ class _HomeMainState extends State<HomeMain> {
   @override
   void initState() {
     super.initState();
+    _listenAuthChange();
     onRefresh();
+  }
+
+  void _listenAuthChange() async {
+    userCtrl.user.listen((user) {
+      if (user.role != "guest") {
+        onRefresh();
+      }
+    });
   }
 
   void onRefresh() async {

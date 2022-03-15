@@ -352,7 +352,7 @@ class _AddNewNoticeState extends State<AddNewNotice> {
         Row(
           children: [
             Text("attachments".tr),
-            if (attachmentFile == null) Spacer(),
+            Spacer(),
             IconButton(
               onPressed: () async {
                 var ctrl = Get.find<ImageController>();
@@ -469,7 +469,10 @@ class _AddNewNoticeState extends State<AddNewNotice> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Confirm"),
+          Text(
+            "Confirm",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ],
       ),
     );

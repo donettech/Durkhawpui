@@ -119,7 +119,10 @@ class _ChangeAdminRoleDialogState extends State<ChangeAdminRoleDialog> {
                                 });
                                 Get.back(result: true);
                               },
-                              child: Text("Confirm"),
+                              child: Text(
+                                "Confirm",
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
                             ),
                     ),
                   ],
